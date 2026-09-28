@@ -35,6 +35,14 @@ Hola. Continúo un proyecto: pruebo **Jev** (el modelo "System One" de TypeSafe 
 - **Canal de mercado en tiempo real**: `wss://ws-subscriptions-clob.polymarket.com/ws/market`, suscripción `{"assets_ids":[...],"type":"market","custom_feature_enabled":true}`. Eventos: `book`, `price_change`, `last_trade_price`, `best_bid_ask`, `market_resolved`. `PING` cada 10 s. No incluye la wallet de quien opera.
 - **Comisión taker** (crypto_fees_v2): `acciones × rate × p × (1−p)`, con `rate` = 0.07. Mínimo 5 acciones por orden.
 
+## Analizador de wallets (`wallets.py`)
+
+- Fase 1: `/trades?market=<conditionId>` con `takerOnly=false` (todas) y `takerOnly=true` (para saber qué operaciones fueron taker, comparando `transactionHash`+wallet+lado+side+size).
+- Fase 2: `/activity?user=&start=&end=` para las wallets con más volumen, más ganancia y más pérdida. Incluye SPLIT y MERGE. Si un tramo llega al tope de filas se parte en dos.
+- Ganancia por wallet y ventana = caja (−compras +ventas −split +merge) + acciones que le quedan × pago según la resolución. La comisión solo se estima en las operaciones taker. No incluye reembolsos maker.
+- "Compra los dos lados" = compró Up y Down y llegó a tener el par (lo mantuvo hasta el cierre o lo deshizo con merge).
+- Campos de la API sin verificar que se usan con `.get()`: `transactionHash`, `name`/`pseudonym`, el tope de `offset` y que `/activity` acepte `start`/`end` sin `market`.
+
 ## Lo aprendido investigando bots
 
 - Desde enero/febrero de 2026, Polymarket cobra comisiones dinámicas (máximas cerca de 50¢) y quitó el retraso de 500 ms. El arbitraje de latencia basado en tomar órdenes dejó de ser rentable.
@@ -44,9 +52,9 @@ Hola. Continúo un proyecto: pruebo **Jev** (el modelo "System One" de TypeSafe 
   - **Salir pronto** en lugar de aguantar hasta el cierre.
 - Los bots reaccionan a **eventos** (cambios del libro, operaciones, movimientos de precio), no a intervalos fijos.
 
-## Próximos pasos (elegir uno)
+## Próximos pasos
 
-1. **Analizador de wallets**: durante X horas de mercados BTC 5m, encontrar las wallets que más operan y más ganan, y medir cuándo compran dentro de la ventana, a qué precio, si compran los dos lados, si venden antes y cuánto ganan por ventana. Todo en un informe HTML.
+1. ~~**Analizador de wallets**~~ → hecho en `wallets.py` (pendiente de ejecutar con datos reales): durante X horas de mercados BTC 5m, encontrar las wallets que más operan y más ganan, y medir cuándo compran dentro de la ventana, a qué precio, si compran los dos lados, si venden antes y cuánto ganan por ventana. Todo en un informe HTML.
 2. **Simulador por eventos**: sustituir el intervalo fijo por triggers del canal de mercado en tiempo real y de Chainlink (el libro se mueve, entra una operación grande, salta el precio, un lado se abarata). En cada trigger decide Jev. Añadir la estrategia de comprar los dos lados con seguimiento del coste del par, y simular órdenes maker.
 
 ## Cosas a tener en cuenta
