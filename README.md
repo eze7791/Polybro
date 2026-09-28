@@ -4,6 +4,7 @@ Paper trading de **Jev** (System One de TypeSafe AI) en los mercados "Bitcoin Up
 
 - `simulador.py`: simulador y generador del informe HTML.
 - `informe.py`: generación del informe.
+- `ejemplos/informe_ejemplo.html`: informe generado con datos inventados.
 - `CONTEXTO.md`: estado del proyecto, APIs verificadas y próximos pasos.
 
 ## Uso
