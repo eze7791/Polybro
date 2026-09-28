@@ -46,6 +46,12 @@ Hola. Continúo un proyecto: pruebo **Jev** (el modelo "System One" de TypeSafe 
 ## Lo aprendido investigando bots
 
 - Desde enero/febrero de 2026, Polymarket cobra comisiones dinámicas (máximas cerca de 50¢) y quitó el retraso de 500 ms. El arbitraje de latencia basado en tomar órdenes dejó de ser rentable.
+- **Actualización (septiembre 2026):**
+  - Retraso taker: volvió a 250 ms el 5 de junio (la orden queda bloqueada, no se puede cancelar durante el retraso) y bajó a **50 ms** el 17 de agosto.
+  - Resolución: desde el 7 de agosto se usa una **media (TWAP) de Chainlink**, no el último tick. Desde el 14 de agosto la ventana de 5 min usa **TWAP de 60 s** (antes 30 s). La de 15 min también usa 60 s. El **precio de apertura sigue siendo un tick único** (sigue siendo manipulable).
+  - Motivo: un estudio de Stanford/SMU encontró 821 cuentas que ganaron 8,2 M$ moviendo Binance en los últimos segundos.
+  - Comisión cripto: `rate` = 0.07 (antes 0.072). Los makers no pagan y reciben ~20 % de las comisiones taker cada día.
+  - Liquidez típica de un mercado BTC 5m: 5 000–15 000 $ por lado.
 - Lo que sigue funcionando:
   - **Poner órdenes en el libro** (maker) en vez de tomarlas, y cobrar reembolsos.
   - **Comprar los dos lados** en momentos distintos, cuando cada uno está barato, hasta que Up medio + Down medio < 1 $ (estilo "gabagool").
