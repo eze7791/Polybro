@@ -113,3 +113,19 @@ Textos (4K; en 1080p la mitad), alineados a la izquierda, todos en X = 400:
 | Ubicación | Waterstown Park · Dublín | Cormorant Garamond Bold | **150** | 1900 |
 
 Plantilla: Gráficos esenciales → Nueva capa → Desde archivo → el PNG del estado; 4 capas de texto con las medidas de arriba; Exportar como plantilla de gráficos animados → "Elita – placa <estado>".
+
+## Placas de temporada (fecha/estación, temperatura, cielo y ubicación con personalidad)
+
+Archivos en `temporadas/<temporada>/<ES|EN>/placa-<temporada>_<cielo>_4K.png`. Temporadas: `otono`, `halloween`, `invierno`, `navidad`, `sanpatricio`, `primavera`, `verano`; cielos: despejado, parcial, nublado, lluvia, niebla, viento, nieve, noche-despejada. Cada PNG trae la tarjeta con el color de la temporada, la ilustración, la etiqueta (OTOÑO / AUTUMN…), el camino punteado y los 4 íconos. Ejemplos en `temporadas/ejemplos/`.
+
+Textos (secuencia 4K; en 1080p poné el PNG a escala 50 % y usá la mitad de cada número), en crema `F2EEE6`, alineados a la izquierda, X = 380:
+
+| Línea | Fuente | Tamaño | Línea base Y |
+|---|---|---|---|
+| Fecha / estación | Cormorant Garamond Bold | 100 | 1440 |
+| Temperatura | Josefin Sans Bold | 88 | 1590 |
+| Cielo | Cormorant Garamond Bold | 100 | 1740 |
+| Ubicación | Cormorant Garamond Bold | 130 | 1920 |
+
+Sombra para estos textos (más suave porque ya van sobre la tarjeta): negro, opacidad 45 %, distancia 2, desenfoque 16.
+Calendario sugerido: otoño sep–oct · halloween última semana de octubre · navidad diciembre · invierno enero–febrero · san patricio marzo (o solo el 17) · primavera marzo–mayo · verano junio–agosto.
