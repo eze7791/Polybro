@@ -8,7 +8,7 @@ FPS=60
 W,H,G=Y.W,Y.H,Y.G
 TEMAS={'crema':dict(bg='#F2EEE6',ink='#2A2C27',sand='#8C6A3C'),
        'noche':dict(bg='#1A2236',ink='#EEE7DA',sand='#C9A978')}
-TXT={'EN':(['Thanks for walking','with me.'],'SUBSCRIBE'),'ES':(['Gracias por caminar','conmigo.'],'SUSCRIBITE')}
+TXT={'EN':(['Thanks for walking','with me.'],'SUBSCRIBE',('PREVIOUS','NEXT')),'ES':(['Gracias por caminar','conmigo.'],'SUSCRIBITE',('ANTERIOR','SIGUIENTE'))}
 LW=520
 TRAIL_D=f'M14 0 C {LW*.21} -26, {LW*.33} 22, {LW*.5} 2 S {LW*.81} -24, {LW-12} 2'
 PIN=f'M{LW} 6 c-9 -12 -14 -17 -14 -24 a14 14 0 0 1 28 0 c0 7 -5 12 -14 24z'
@@ -48,13 +48,13 @@ window.setT=t=>{
   const a=E(seg(t,3.5,4.6)), adv=document.getElementById('adv'); adv.setAttribute('opacity',a); adv.setAttribute('letter-spacing',17+10*(1-a));
 };'''
 OPENING_DUR=6.0
-# ---------- closing: el logo se desarma, las ventanas se apagan en orden (cierra el día),
-# frase de despedida y pantalla final con huecos para los elementos de YouTube ----------
-# Huecos (en 1080p): 2 videos 16:9 de 720x405 a la derecha, botón de suscripción (círculo) a la izquierda.
-VIDEOS=[(1100,120,720,405),(1100,560,720,405)]
+# ---------- closing: frase de despedida y pantalla final con el nombre, el botón de suscripción
+# y 2 cuadros para los videos anterior y siguiente (elementos de YouTube) ----------
+# Cuadros (en 1080p): 2 videos 16:9 de 680x383 a la derecha; círculo de suscripción a la izquierda.
+VIDEOS=[(1140,150,680,383),(1140,620,680,383)]
 SUBS=(470,800,92)
 def pantalla_final(ink,sand,lang,guias=False):
-    subs=TXT[lang][1]
+    subs=TXT[lang][1]; rot=TXT[lang][2]
     b=f'<g id="hl">{Y.hills(1920,1080).replace(Y.SAND,sand)}</g>'
     b+=f'<g id="e1"><text x="470" y="430" text-anchor="middle" font-family="CG" font-weight="600" font-size="150" fill="{ink}">Elita</text>'
     b+=Y.trail(470-200,492,400,'punteado',col=sand)
@@ -62,37 +62,32 @@ def pantalla_final(ink,sand,lang,guias=False):
     cx,cy,r=SUBS
     b+=f'<g id="e2"><circle cx="{cx}" cy="{cy}" r="{r+10}" fill="none" stroke="{sand}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 8"/>'
     b+=f'<text x="{cx+4}" y="{cy+r+62}" text-anchor="middle" font-family="JS" font-weight="600" font-size="22" letter-spacing="8" fill="{sand}">{subs}</text></g>'
+    # cuadros de video: marco punteado 10 px por fuera del hueco (YouTube pone la miniatura adentro) y etiqueta arriba
+    b+='<g id="e3">'
+    for (x,y,w,h),lab in zip(VIDEOS,rot):
+        b+=f'<rect x="{x-10}" y="{y-10}" width="{w+20}" height="{h+20}" rx="22" fill="{ink}" fill-opacity=".05" stroke="{sand}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 8"/>'
+        b+=f'<text x="{x-6}" y="{y-28}" font-family="JS" font-weight="600" font-size="22" letter-spacing="8" fill="{sand}">{lab}</text>'
+    b+='</g>'
     if guias:
         for x,y,w,h in VIDEOS:
-            b+=f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{ink}" fill-opacity=".06" stroke="{ink}" stroke-opacity=".35" stroke-width="2" stroke-dasharray="10 8"/><text x="{x+w/2}" y="{y+h/2+10}" text-anchor="middle" font-family="JS" font-weight="600" font-size="26" letter-spacing="8" fill="{ink}" fill-opacity=".45">VIDEO</text>'
+            b+=f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{ink}" fill-opacity=".08"/><text x="{x+w/2}" y="{y+h/2+10}" text-anchor="middle" font-family="JS" font-weight="600" font-size="26" letter-spacing="8" fill="{ink}" fill-opacity=".45">VIDEO</text>'
         b+=f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{ink}" fill-opacity=".08"/>'
     return b
 def closing(bg,ink,sand,lang):
     lines=TXT[lang][0]
     fw=f'<g id="fw" opacity="0">'+''.join(f'<text x="960" y="{480+k*112}" text-anchor="middle" font-family="CG" font-style="italic" font-weight="600" font-size="100" fill="{ink}">{t}</text>' for k,t in enumerate(lines))
     fw+=f'<text x="960" y="{480+len(lines)*112+20}" text-anchor="middle" font-family="CG" font-style="italic" font-weight="500" font-size="56" fill="{sand}">— Elita</text></g>'
-    return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">{defs()}<rect width="1920" height="1080" fill="{bg}"/>{logo(ink,sand)}{fw}{pantalla_final(ink,sand,lang)}</svg>'
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">{defs()}<rect width="1920" height="1080" fill="{bg}"/>{fw}{pantalla_final(ink,sand,lang)}</svg>'
 def final_guias(bg,ink,sand,lang):
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">{defs()}<rect width="1920" height="1080" fill="{bg}"/>{pantalla_final(ink,sand,lang,guias=True)}</svg>'
 JS_CLOSING='''
-const E=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3), IO=t=>{t=Math.max(0,Math.min(1,t));return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2};
-const seg=(t,a,b)=>(t-a)/(b-a), $=id=>document.getElementById(id);
+const E=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3), seg=(t,a,b)=>(t-a)/(b-a), $=id=>document.getElementById(id);
 const fade=(id,p,dy=16)=>{const g=$(id); g.setAttribute('opacity',p); g.style.transform=`translateY(${(1-p)*dy}px)`;};
 window.setT=t=>{
-  // 1) el logo se desarma: ADVENTURES y el pin se van, el camino vuelve al punto de salida, se va "Elita"
-  const a=E(seg(t,.6,1.3)); $('adv').setAttribute('opacity',1-a); $('adv').setAttribute('letter-spacing',17+10*a);
-  const pp=1-E(seg(t,.7,1.1)); $('pin').setAttribute('opacity',pp); $('pin').style.transform=`scale(${.6+.4*pp})`;
-  $('mpath').setAttribute('stroke-dashoffset',1-IO(1-seg(t,.9,2.0)));
-  $('dot').setAttribute('opacity',1-E(seg(t,1.9,2.2)));
-  const n=E(seg(t,1.2,2.0)); $('nm').setAttribute('opacity',1-n); $('nm').setAttribute('transform',`translate(0,${-n*12})`);
-  // 2) las ventanas se apagan en orden (amanecer, día, lluvia, noche) y desaparecen
-  for(let i=0;i<4;i++){const d=E(seg(t,1.8+.5*i,2.4+.5*i)), o=E(seg(t,2.3+.5*i,2.9+.5*i));
-    $('o'+i).setAttribute('opacity',.82*d); $('w'+i).setAttribute('opacity',1-o); $('w'+i).setAttribute('transform',`translate(${i*240},${o*22})`);}
-  // 3) frase de despedida, y 4) pantalla final
-  fade('fw',E(seg(t,4.5,5.4))*(1-E(seg(t,7.3,7.9))),12);
-  fade('hl',E(seg(t,8.0,9.0)),0); fade('e1',E(seg(t,8.2,9.2))); fade('e2',E(seg(t,8.6,9.6)));
+  fade('fw',E(seg(t,.3,1.3))*(1-E(seg(t,3.6,4.2))),12);
+  fade('hl',E(seg(t,4.3,5.3)),0); fade('e1',E(seg(t,4.5,5.5))); fade('e2',E(seg(t,4.9,5.9))); fade('e3',E(seg(t,5.1,6.1)));
 };'''
-CLOSING_ANIM=9.6; FINAL_INICIO=8.0
+CLOSING_ANIM=6.1; FINAL_INICIO=4.2
 FINAL_DUR=20.0  # la pantalla final dura 20 s desde FINAL_INICIO (máximo que permite YouTube)
 async def main(res,fps,que):
     global FPS; FPS=fps
