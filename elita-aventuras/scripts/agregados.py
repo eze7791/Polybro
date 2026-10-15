@@ -114,6 +114,28 @@ def todo(out='agregados'):
         for k,(tipo,kw) in enumerate(ej,1):
             t.append((f'{out}/placas-4K/{lang}/{k}-{tipo}{"-"+kw["icono_nombre"] if kw.get("icono_nombre") else ""}.png',placa(tipo,lang=lang,**kw),(1920,1080),2))
     asyncio.run(generar(t))
+# ---------- fila de clima: termómetro + temperatura, ícono del cielo + estado ----------
+# Va arriba de la fila de ubicación (línea base 1900 en 4K), así se pueden mostrar juntas.
+# Medidas en 4K; en 1080p, la mitad.
+CLIMA_BASE=1720; CLIMA_TX=(380,920); CLIMA_ICONOS_X=(192,720); ICON_TAM=170
+CIELOS={'despejado':'sol','parcial':'sol_nube','nublado':'nube','lluvia':'lluvia','niebla':'niebla','viento':'viento','nieve':'nieve','noche-despejada':'luna'}
+def fila_clima(cielo,guia=False,textos=None):
+    cy=CLIMA_BASE-0.63*115/2
+    iy=cy-ICON_TAM*24.5/48-14
+    halo='filter:drop-shadow(0 0 20px rgba(20,26,38,.65)) drop-shadow(0 4px 6px rgba(0,0,0,.45))'
+    b=''.join(f'<div style="position:absolute;left:{x}px;top:{iy}px;{halo}">{icono(n,CREMA,ICON_TAM,2.6)}</div>' for x,n in zip(CLIMA_ICONOS_X,('temperatura',CIELOS[cielo])))
+    if textos:
+        b+=f'<svg style="position:absolute;left:0;top:0;overflow:visible" width="3840" height="2160"><defs><filter id="s" x="-20%" y="-60%" width="140%" height="220%"><feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#141A26" flood-opacity=".7"/></filter></defs>'
+        b+=''.join(f'<text x="{x}" y="{CLIMA_BASE}" font-family="CG" font-weight="700" font-size="115" fill="{CREMA}" filter="url(#s)">{t}</text>' for x,t in zip(CLIMA_TX,textos))+'</svg>'
+    if guia:
+        for x in CLIMA_TX:
+            b+=f'<div style="position:absolute;left:{x}px;top:{CLIMA_BASE}px;width:420px;height:4px;background:#ff3b6b"></div><div style="position:absolute;left:{x}px;top:{CLIMA_BASE-200}px;width:4px;height:260px;background:#ff3b6b"></div>'
+    return f'<div style="position:relative;width:3840px;height:2160px">{b}</div>'
+def todo_clima(out='agregados/clima'):
+    t=[(f'{out}/clima-iconos_{c}_4K.png',fila_clima(c),(3840,2160),1) for c in CIELOS]
+    t.append((f'{out}/guia-clima_4K.png',fila_clima('despejado',guia=True).replace('<div style="position:absolute;left:192','<div style="display:none;left:192').replace('<div style="position:absolute;left:720','<div style="display:none;left:720'),(3840,2160),1))
+    asyncio.run(generar(t))
+
 if __name__=='__main__':
     import sys
     if len(sys.argv)>1 and sys.argv[1]=='placa':
@@ -124,5 +146,7 @@ if __name__=='__main__':
         a.add_argument('--sin-firma',action='store_true'); a.add_argument('-o','--salida',default='placa.png')
         o=a.parse_args()
         asyncio.run(generar([(o.salida,placa(o.tipo,o.titulo,o.texto,o.etiqueta,o.icono,o.lang,not o.sin_firma),(1920,1080),2)]))
+    elif len(sys.argv)>1 and sys.argv[1]=='clima':
+        todo_clima()
     else:
-        todo()
+        todo(); todo_clima()

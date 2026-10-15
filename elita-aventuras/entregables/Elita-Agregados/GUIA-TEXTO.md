@@ -59,3 +59,14 @@ Archivos en `ubicacion/`: `ubicacion-icono_4K.png` (el ícono ya ubicado) y `gui
 | Tamaño | 115 | 57,5 |
 
 Alineación a la izquierda. Con la guía encima, mové el texto hasta que arranque en la línea roja vertical y se apoye en la horizontal; después borrá la guía y guardalo como plantilla.
+
+## Fila de clima (va arriba de la ubicación)
+
+Archivos en `clima/`: `clima-iconos_<estado>_4K.png` con el termómetro y el ícono del cielo ya ubicados (despejado, parcial, nublado, lluvia, niebla, viento, nieve, noche-despejada) y `guia-clima_4K.png`. En 1080p, los `_1080p.png` y la mitad de cada número.
+
+| Texto | Fuente | Tamaño | X (4K) | Línea base Y (4K) |
+|---|---|---|---|---|
+| Temperatura ("12°C") | **Josefin Sans Bold** (sus números quedan todos a la misma altura; los de Cormorant bajan) | 100 | 380 | 1720 |
+| Estado ("Despejado") | Cormorant Garamond Bold | 115 | 920 | 1720 |
+
+Íconos sueltos a mano (Controles de efectos, escala 106): termómetro en posición 277 · 1668; cielo en 805 · 1668.
