@@ -136,6 +136,21 @@ def todo_clima(out='agregados/clima'):
     t.append((f'{out}/guia-clima_4K.png',fila_clima('despejado',guia=True).replace('<div style="position:absolute;left:192','<div style="display:none;left:192').replace('<div style="position:absolute;left:720','<div style="display:none;left:720'),(3840,2160),1))
     asyncio.run(generar(t))
 
+# ---------- fila estación + temperatura + ícono del cielo (Ivan escribe estación y temperatura) ----------
+# 4K: línea base 1720 (arriba de la ubicación). Íconos sueltos a escala 106 % (cuadro de 170 px).
+EST={'base':1720,'estacion_x':192,'termo_c':(845,1668),'temp_x':930,'cielo_c':(1365,1668)}
+def fila_estacion(cielo='nube',textos=None,guia=False,fondo=''):
+    halo='filter:drop-shadow(0 0 20px rgba(20,26,38,.65)) drop-shadow(0 4px 6px rgba(0,0,0,.45))'
+    b=''.join(f'<div style="position:absolute;left:{cx-ICON_TAM/2}px;top:{cy-ICON_TAM/2}px;{halo}">{icono(n,CREMA,ICON_TAM,2.6)}</div>' for (cx,cy),n in ((EST['termo_c'],'temperatura'),(EST['cielo_c'],cielo)))
+    if textos:
+        b+=f'<svg style="position:absolute;left:0;top:0;overflow:visible" width="3840" height="2160"><defs><filter id="s" x="-20%" y="-60%" width="140%" height="220%"><feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#141A26" flood-opacity=".7"/></filter></defs>'
+        b+=f'<text x="{EST["estacion_x"]}" y="{EST["base"]}" font-family="CG" font-weight="700" font-size="115" fill="{CREMA}" filter="url(#s)">{textos[0]}</text>'
+        b+=f'<text x="{EST["temp_x"]}" y="{EST["base"]}" font-family="JS" font-weight="700" font-size="100" fill="{CREMA}" filter="url(#s)">{textos[1]}</text></svg>'
+    if guia:
+        for x,w in ((EST['estacion_x'],520),(EST['temp_x'],300)):
+            b+=f'<div style="position:absolute;left:{x}px;top:{EST["base"]}px;width:{w}px;height:4px;background:#ff3b6b"></div><div style="position:absolute;left:{x}px;top:{EST["base"]-200}px;width:4px;height:260px;background:#ff3b6b"></div>'
+    return f'<div style="position:relative;width:3840px;height:2160px;{fondo}">{b}</div>'
+
 if __name__=='__main__':
     import sys
     if len(sys.argv)>1 and sys.argv[1]=='placa':

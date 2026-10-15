@@ -70,3 +70,17 @@ Archivos en `clima/`: `clima-iconos_<estado>_4K.png` con el termómetro y el íc
 | Estado ("Despejado") | Cormorant Garamond Bold | 115 | 920 | 1720 |
 
 Íconos sueltos a mano (Controles de efectos, escala 106): termómetro en posición 277 · 1668; cielo en 805 · 1668.
+
+## Fila estación + temperatura + clima (la que usa Ivan)
+
+Archivos en `estacion/`: íconos sueltos transparentes (`icono_temperatura.png` y para el cielo `icono_sol`, `icono_sol_nube`, `icono_nube`, `icono_lluvia`, `icono_niebla`, `icono_viento`, `icono_nieve`, `icono_luna`), `guia-estacion_4K.png` y `ejemplo.jpg`. Va arriba de la ubicación.
+
+Secuencia 4K (en 1080p, la mitad de cada número y escala 53):
+
+| Elemento | Qué es | Posición | Tamaño / escala |
+|---|---|---|---|
+| Estación | texto: Cormorant Garamond Bold, alineado a la izquierda | X 192 · Y 1720 (línea base) | 115 |
+| Termómetro | `icono_temperatura.png` | 845 · 1668 | escala 106 |
+| Temperatura | texto: **Josefin Sans Bold** | X 930 · Y 1720 (línea base) | 100 |
+| Clima | `icono_nube.png`, `icono_sol.png`, etc. | 1365 · 1668 | escala 106 |
+| (Ubicación, abajo) | `ubicacion.png` + texto | 277 · 1848 / texto X 380 · Y 1900 | 106 / 115 |
