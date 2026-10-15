@@ -23,7 +23,7 @@ python3 -m playwright install chromium
 cd scripts
 python3 yt2.py     # banners y perfiles → scripts/yt2/
 python3 yt.py      # combinaciones anteriores → scripts/yt/
-python3 logo.py    # logo v2 (curva marcada) → scripts/out/
+python3 logo.py    # logo elegido → scripts/out/Elita-Logo-camino/  (python3 logo.py v2: variante no elegida)
 python3 marca.py   # marcas de agua → scripts/marca/
 python3 video.py [1080|4K] [fps] [opening|closing|todo]   # por defecto 4K 60 todo → scripts/video/
 ```

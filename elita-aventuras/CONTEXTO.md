@@ -15,10 +15,12 @@ Textos definitivos del banner: "Calles y caminos, sólo con sonido ambiente" (co
 
 Arriba, 4 ventanas (paneles verticales con esquinas redondeadas, 220×320, separación 20), en el orden de un día:
 
-1. Argentina al amanecer: Buenos Aires con el Obelisco, jacarandás lilas, sol bajo, cielo lila → durazno.
-2. Alemania de día: castillo blanco con torres de techo azul pizarra sobre colina rocosa, Alpes nevados y pinos.
-3. Irlanda con lluvia: colinas verdes, muros de piedra, ovejas de cara negra, torre en ruinas, lluvia en diagonal.
-4. Noche: auroras verdes, luna creciente, estrellas, montaña, lago con reflejo y pinos.
+1. Argentina al amanecer: Buenos Aires con el Obelisco, jacarandás lilas, sol bajo, cielo lila → durazno. La avenida llega hasta la base del Obelisco y hay una bandera argentina chica en un mástil.
+2. Alemania de día: castillo blanco con torres de techo azul pizarra y puerta en arco, sobre una colina verde, Alpes nevados y pinos.
+3. Irlanda con lluvia: colinas verdes, ovejas de cara negra, torre en ruinas apoyada detrás de la cresta de la colina, lluvia en diagonal (sin muros de piedra).
+4. Noche: auroras verdes, luna creciente, estrellas, montaña, lago con reflejo de la aurora y pinos.
+
+Ajustes del 15/10 (pedido de Ivan, sin cambiar la estética): calle hasta el Obelisco + bandera, colina del castillo verde + puerta, torre de Irlanda sin flotar y sin las líneas crema de los muros, sin el óvalo gris del lago. Se regeneraron logo, banners, vista previa de la marca de agua y opening (el closing y las fotos de perfil no usan las ventanas).
 
 Descartado: Argentina con Patagonia (`ar_pat` en `logo.py`). Ivan eligió Buenos Aires.
 
@@ -58,6 +60,6 @@ No elegida: "Elita-Logo-camino-v2" (curva más marcada y opción sin punto ni pi
 
 ## Notas de los scripts
 
-- `logo.py`: escenas de las ventanas en SVG (diccionario `P`: `ar_ba`, `ar_pat`, `de`, `ie`, `nt`). Ojo: es la v2, con la curva marcada; el logo elegido usa la curva suave de `yt.trail()`.
+- `logo.py`: escenas de las ventanas en SVG (diccionario `P`: `ar_ba`, `ar_pat`, `de`, `ie`, `nt`). `python3 logo.py` genera el logo elegido (`logo_camino()`, verificado contra los PNG originales); `python3 logo.py v2` la variante no elegida.
 - `yt.py`: `windows()`, `trail()` (estilos `puntos` / `punteado` / `continuo`) y `hills()`.
 - `yt2.py`: `banner(variant='A'|'B'|'C'|'ES'|'EN')` y perfiles (`PERF`). Verificado: reproduce los entregables píxel por píxel.
