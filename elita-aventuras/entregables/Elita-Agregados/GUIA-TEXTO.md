@@ -84,3 +84,17 @@ Secuencia 4K (en 1080p, la mitad de cada número y escala 53):
 | Temperatura | texto: **Josefin Sans Bold** | X 930 · Y 1720 (línea base) | 100 |
 | Clima | `icono_nube.png`, `icono_sol.png`, etc. | 1365 · 1668 | escala 106 |
 | (Ubicación, abajo) | `ubicacion.png` + texto | 277 · 1848 / texto X 380 · Y 1900 | 106 / 115 |
+
+## Bloque de clima (estación / temperatura / cielo, uno abajo del otro)
+
+Archivos en `bloque-clima/`: `bloque-clima_<estado>_4K.png` (calendario + termómetro + ícono del cielo, ya ubicados; estados: despejado, parcial, nublado, lluvia, niebla, viento, nieve, noche-despejada), `guia-bloque_4K.png` y `ejemplo.jpg`. No incluye la ubicación; queda justo arriba de ella, así pueden convivir.
+
+Textos (4K; en 1080p la mitad), alineados a la izquierda, X = 380:
+
+| Línea | Ejemplo | Fuente | Tamaño | Línea base Y |
+|---|---|---|---|---|
+| Estación | Otoño | Cormorant Garamond Bold | 115 | 1360 |
+| Temperatura | 12°C | Josefin Sans Bold | 100 | 1540 |
+| Cielo | Parcialmente nublado | Cormorant Garamond Bold | 115 | 1720 |
+
+Plantilla (una vez por cada estado del cielo que uses): Gráficos esenciales → Editar → Nueva capa → Desde archivo → `bloque-clima_<estado>_4K.png`; agregar las 3 capas de texto con las medidas de arriba; clic derecho en el clip → Exportar como plantilla de gráficos animados → "Elita – clima <estado>".

@@ -33,6 +33,7 @@ I={
  'cafe':'<path d="M9 21 h24 v8 a10 10 0 0 1 -10 10 h-4 a10 10 0 0 1 -10 -10z"/><path d="M33 23 h3 a4.5 4.5 0 0 1 0 9 h-4"/><path d="M16 9 q-2 3 0 6 M22 8 q-2 3 0 6 M28 9 q-2 3 0 6"/>',
  'pajaro':'<path d="M6 22 q7 -7 12 2 q5 -9 12 -2"/><path d="M24 33 q4.5 -5 8 1 q3.5 -6 8 -1"/>',
  'ciudad':'<path d="M5 42 h38"/><path d="M8 42 V22 h10 v20 M18 42 V10 h12 v32 M30 42 V18 h10 v24"/><path d="M22 16 h4 M22 22 h4 M22 28 h4 M12 28 h2 M34 24 h2 M34 30 h2"/>',
+ 'calendario':'<rect x="7" y="10" width="34" height="31" rx="4"/><path d="M7 19 h34 M16 6 v8 M32 6 v8"/><circle cx="17" cy="27" r="1.7" fill="currentColor"/><circle cx="24" cy="27" r="1.7" fill="currentColor"/><circle cx="31" cy="27" r="1.7" fill="currentColor"/><circle cx="17" cy="34" r="1.7" fill="currentColor"/><circle cx="24" cy="34" r="1.7" fill="currentColor"/>',
  'pasos':'<ellipse cx="17" cy="15" rx="4.5" ry="7"/><path d="M14.5 26 h5"/><ellipse cx="31" cy="27" rx="4.5" ry="7"/><path d="M28.5 38 h5"/>',
 }
 def icono(nombre,col=CREMA,tam=48,sw=2.4):
@@ -151,6 +152,31 @@ def fila_estacion(cielo='nube',textos=None,guia=False,fondo=''):
             b+=f'<div style="position:absolute;left:{x}px;top:{EST["base"]}px;width:{w}px;height:4px;background:#ff3b6b"></div><div style="position:absolute;left:{x}px;top:{EST["base"]-200}px;width:4px;height:260px;background:#ff3b6b"></div>'
     return f'<div style="position:relative;width:3840px;height:2160px;{fondo}">{b}</div>'
 
+# ---------- bloque de clima: estación / temperatura / cielo, uno abajo del otro ----------
+# Misma columna que la ubicación (íconos centrados en x=277, texto en x=380), líneas cada 180 px en 4K:
+# estación 1360, temperatura 1540, cielo 1720 (línea base); la ubicación sigue en 1900.
+BLOQUE={'icono_x':277,'texto_x':380,'bases':(1360,1540,1720)}
+def bloque_clima(cielo='nublado',textos=None,guia=False,fondo='',extra=''):
+    halo='filter:drop-shadow(0 0 20px rgba(20,26,38,.65)) drop-shadow(0 4px 6px rgba(0,0,0,.45))'
+    b=''
+    for base,n in zip(BLOQUE['bases'],('calendario','temperatura',CIELOS[cielo])):
+        cy=base-52
+        b+=f'<div style="position:absolute;left:{BLOQUE["icono_x"]-ICON_TAM/2}px;top:{cy-ICON_TAM/2}px;{halo}">{icono(n,CREMA,ICON_TAM,2.6)}</div>'
+    if textos:
+        b+=f'<svg style="position:absolute;left:0;top:0;overflow:visible" width="3840" height="2160"><defs><filter id="s" x="-20%" y="-60%" width="140%" height="220%"><feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#141A26" flood-opacity=".7"/></filter></defs>'
+        for base,t,(fam,tam) in zip(BLOQUE['bases'],textos,(('CG',115),('JS',100),('CG',115))):
+            b+=f'<text x="{BLOQUE["texto_x"]}" y="{base}" font-family="{fam}" font-weight="700" font-size="{tam}" fill="{CREMA}" filter="url(#s)">{t}</text>'
+        b+='</svg>'
+    if guia:
+        for base in BLOQUE['bases']:
+            b+=f'<div style="position:absolute;left:{BLOQUE["texto_x"]}px;top:{base}px;width:700px;height:4px;background:#ff3b6b"></div>'
+        b+=f'<div style="position:absolute;left:{BLOQUE["texto_x"]}px;top:{BLOQUE["bases"][0]-140}px;width:4px;height:{BLOQUE["bases"][-1]-BLOQUE["bases"][0]+200}px;background:#ff3b6b"></div>'
+    return f'<div style="position:relative;width:3840px;height:2160px;{fondo}">{b}{extra}</div>'
+def todo_bloque(out='agregados/bloque-clima'):
+    t=[(f'{out}/bloque-clima_{c}_4K.png',bloque_clima(c),(3840,2160),1) for c in CIELOS]
+    t.append((f'{out}/guia-bloque_4K.png',bloque_clima(guia=True).replace('<div style="position:absolute;left:192','<div style="display:none;left:192'),(3840,2160),1))
+    asyncio.run(generar(t))
+
 if __name__=='__main__':
     import sys
     if len(sys.argv)>1 and sys.argv[1]=='placa':
@@ -162,6 +188,6 @@ if __name__=='__main__':
         o=a.parse_args()
         asyncio.run(generar([(o.salida,placa(o.tipo,o.titulo,o.texto,o.etiqueta,o.icono,o.lang,not o.sin_firma),(1920,1080),2)]))
     elif len(sys.argv)>1 and sys.argv[1]=='clima':
-        todo_clima()
+        todo_clima(); todo_bloque()
     else:
-        todo(); todo_clima()
+        todo(); todo_clima(); todo_bloque()
