@@ -51,8 +51,9 @@ No elegida: "Elita-Logo-camino-v2" (curva más marcada y opción sin punto ni pi
 
 - Ivan elige el banner (A/B/C o ES/EN), el fondo (crema o noche) y el color de la foto de perfil.
 - ~~Marca de agua~~ **Elegida: "ADVENTURES" + camino punteado** (`entregables/Elita-Marca-de-agua/elegida-adventures-camino/`, cuadros completos transparentes 1080p y 4K, opacidad 80 % incluida: se arrastran a la pista de arriba en Premiere sin escalar). Encaja con la regla de no repetir "Elita" en todos lados. Las otras (Elita + camino, monograma) quedan como alternativas.
-- Pantalla final y marco de miniatura.
-- Intro y outro animados con las 4 ventanas.
+- Opening y pantalla final: primer borrador en 1080p (`video.py`, `entregables/Elita-Video/1080p/`). Opening 6 s: ventanas una por una → "Elita" → el camino se dibuja → pin → ADVENTURES. Pantalla final 20 s: ventanas + "Thanks for walking with me." / "Gracias por caminar conmigo." + "— Elita" + lugar para el botón de suscribirse; a la derecha 2 huecos de video 720×405 en (1100,120) y (1100,560); `_guias.png` muestra dónde poner los elementos en YouTube Studio. Falta: aprobación de Ivan, fondo, versión 4K.
+- Marco de miniatura.
+- (Intro/outro: ver opening y pantalla final.)
 
 ## Notas de los scripts
 
