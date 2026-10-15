@@ -98,3 +98,18 @@ Textos (4K; en 1080p la mitad), alineados a la izquierda, X = 380:
 | Cielo | Parcialmente nublado | Cormorant Garamond Bold | 115 | 1720 |
 
 Plantilla (una vez por cada estado del cielo que uses): Gráficos esenciales → Editar → Nueva capa → Desde archivo → `bloque-clima_<estado>_4K.png`; agregar las 3 capas de texto con las medidas de arriba; clic derecho en el clip → Exportar como plantilla de gráficos animados → "Elita – clima <estado>".
+
+## Placa completa: fecha/estación, temperatura, cielo y ubicación (la que conviene usar)
+
+Archivos en `placa-completa/`: `placa-completa_<estado>_4K.png` con los 4 íconos ya ubicados (calendario, termómetro, cielo y pin más grande), `guia-placa-completa_4K.png` y `ejemplo.jpg`. Estados: despejado, parcial, nublado, lluvia, niebla, viento, nieve, noche-despejada.
+
+Textos (4K; en 1080p la mitad), alineados a la izquierda, todos en X = 400:
+
+| Línea | Ejemplo | Fuente | Tamaño | Línea base Y |
+|---|---|---|---|---|
+| Fecha / estación | Otoño · 15 de octubre | Cormorant Garamond Bold | 115 | 1315 |
+| Temperatura | 12°C | Josefin Sans Bold | 100 | 1495 |
+| Cielo | Parcialmente nublado | Cormorant Garamond Bold | 115 | 1675 |
+| Ubicación | Waterstown Park · Dublín | Cormorant Garamond Bold | **150** | 1900 |
+
+Plantilla: Gráficos esenciales → Nueva capa → Desde archivo → el PNG del estado; 4 capas de texto con las medidas de arriba; Exportar como plantilla de gráficos animados → "Elita – placa <estado>".

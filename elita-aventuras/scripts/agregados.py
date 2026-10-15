@@ -177,6 +177,32 @@ def todo_bloque(out='agregados/bloque-clima'):
     t.append((f'{out}/guia-bloque_4K.png',bloque_clima(guia=True).replace('<div style="position:absolute;left:192','<div style="display:none;left:192'),(3840,2160),1))
     asyncio.run(generar(t))
 
+# ---------- placa completa: fecha/estación, temperatura, cielo y ubicación (más grande) ----------
+# 4K. Íconos centrados en una columna (x=287), textos alineados a la izquierda en x=400.
+# Líneas chicas: texto 115 (temperatura en Josefin 100), ícono 170 px (escala 106 %).
+# Ubicación: texto 150, ícono 210 px (escala 131 %), línea base 1900.
+COMPLETA={'icono_cx':287,'texto_x':400,
+  'lineas':[('calendario',1315,170,115,'CG'),('temperatura',1495,170,100,'JS'),(None,1675,170,115,'CG'),('ubicacion',1900,210,150,'CG')]}
+def centro_icono(base,tam_texto): return base-52*tam_texto/115
+def placa_completa(cielo='nublado',textos=None,guia=False,fondo=''):
+    halo='filter:drop-shadow(0 0 20px rgba(20,26,38,.65)) drop-shadow(0 4px 6px rgba(0,0,0,.45))'
+    cx=COMPLETA['icono_cx']; b=''
+    for n,base,tam,tt,fam in COMPLETA['lineas']:
+        n=n or CIELOS[cielo]; cy=centro_icono(base,max(tt,115))
+        b+=f'<div style="position:absolute;left:{cx-tam/2}px;top:{cy-tam/2}px;{halo}">{icono(n,CREMA,tam,2.6*170/tam if tam>170 else 2.6)}</div>'
+    if textos:
+        b+=f'<svg style="position:absolute;left:0;top:0;overflow:visible" width="3840" height="2160"><defs><filter id="s" x="-20%" y="-60%" width="140%" height="220%"><feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#141A26" flood-opacity=".7"/></filter></defs>'
+        b+=''.join(f'<text x="{COMPLETA["texto_x"]}" y="{base}" font-family="{fam}" font-weight="700" font-size="{tt}" fill="{CREMA}" filter="url(#s)">{t}</text>' for (n,base,tam,tt,fam),t in zip(COMPLETA['lineas'],textos))+'</svg>'
+    if guia:
+        for n,base,tam,tt,fam in COMPLETA['lineas']:
+            b+=f'<div style="position:absolute;left:{COMPLETA["texto_x"]}px;top:{base}px;width:900px;height:4px;background:#ff3b6b"></div>'
+        b+=f'<div style="position:absolute;left:{COMPLETA["texto_x"]}px;top:1150px;width:4px;height:800px;background:#ff3b6b"></div>'
+    return f'<div style="position:relative;width:3840px;height:2160px;{fondo}">{b}</div>'
+def todo_completa(out='agregados/placa-completa'):
+    t=[(f'{out}/placa-completa_{c}_4K.png',placa_completa(c),(3840,2160),1) for c in CIELOS]
+    t.append((f'{out}/guia-placa-completa_4K.png',placa_completa(guia=True).replace('<div style="position:absolute;left:202','<div style="display:none;left:202').replace('<div style="position:absolute;left:182','<div style="display:none;left:182'),(3840,2160),1))
+    asyncio.run(generar(t))
+
 if __name__=='__main__':
     import sys
     if len(sys.argv)>1 and sys.argv[1]=='placa':
@@ -188,6 +214,6 @@ if __name__=='__main__':
         o=a.parse_args()
         asyncio.run(generar([(o.salida,placa(o.tipo,o.titulo,o.texto,o.etiqueta,o.icono,o.lang,not o.sin_firma),(1920,1080),2)]))
     elif len(sys.argv)>1 and sys.argv[1]=='clima':
-        todo_clima(); todo_bloque()
+        todo_clima(); todo_bloque(); todo_completa()
     else:
-        todo(); todo_clima(); todo_bloque()
+        todo(); todo_clima(); todo_bloque(); todo_completa()
