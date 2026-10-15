@@ -21,7 +21,7 @@ def html(foto=None,titulo='',lugar='',etiqueta='',texto=True):
 html,body{{margin:0;background:transparent}}
 #m{{position:relative;width:1280px;height:720px;overflow:hidden;font-family:CG}}
 #foto{{position:absolute;inset:0;background-size:cover;background-position:center}}
-#deg{{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,26,38,.74) 0%,rgba(20,26,38,.38) 30%,rgba(20,26,38,0) 56%)}}
+#deg{{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,26,38,.5) 0%,rgba(20,26,38,0) 22%),linear-gradient(to top,rgba(20,26,38,.74) 0%,rgba(20,26,38,.38) 30%,rgba(20,26,38,0) 56%)}}
 #marco{{position:absolute;inset:24px;border:3px solid rgba(242,238,230,.92);border-radius:26px;box-shadow:0 0 12px rgba(0,0,0,.25),inset 0 0 12px rgba(0,0,0,.18)}}
 #et{{position:absolute;left:62px;top:56px;font-family:JS;font-weight:600;font-size:22px;letter-spacing:6px;color:{CREMA};text-shadow:{SOMBRA}}}
 #tx{{position:absolute;left:66px;right:66px;bottom:60px;color:{CREMA}}}
