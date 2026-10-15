@@ -1,57 +1,83 @@
 import argparse, asyncio, base64, mimetypes, os
 from playwright.async_api import async_playwright
-# Marco de miniatura de YouTube (1280x720): borde redondeado como las ventanas del logo,
-# degradado oscuro abajo para que el texto se lea sobre cualquier foto, título en Cormorant,
-# camino punteado con pin, lugar en Josefin y etiqueta arriba ("4K · SONIDO AMBIENTE").
+# Miniatura de YouTube (1280x720) con la estética de Elita. Tres estilos:
+#   ventana: la foto dentro de una ventana redondeada (como las del logo) sobre crema, texto al costado en tinta.
+#   minima:  foto completa sin marco, título centrado abajo con el camino punteado y el lugar.
+#   marco:   foto completa con borde crema redondeado, etiqueta arriba y texto abajo a la izquierda.
 # Uso:
-#   python3 miniatura.py foto.jpg "Waterstown Park" "DUBLÍN · IRLANDA" --lang ES -o mini.jpg
-#   python3 miniatura.py --marco -o marco.png        (solo el marco, PNG transparente)
+#   python3 miniatura.py foto.jpg "Waterstown Park" "Dublín · Irlanda" --lang ES --estilo ventana -o mini.jpg
+#   python3 miniatura.py foto.jpg "Waterstown Park" "Dublin · Ireland" --estilo minima -o mini.jpg
+#   python3 miniatura.py --marco -o marco.png        (solo el marco del estilo "marco", PNG transparente)
 ETIQUETA={'ES':'4K · SONIDO AMBIENTE','EN':'4K · AMBIENT SOUND'}
-CREMA='#F2EEE6'; ARENA='#D2B587'
+CREMA='#F2EEE6'; TINTA='#2A2C27'; ARENA='#D2B587'; ARENA_OSC='#8C6A3C'
 SOMBRA='0 2px 14px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.35)'
-def camino(lw=300):
+def camino(lw=300,col=ARENA,sombra=True):
+    # el lienzo deja margen para el pin de llegada (arriba hasta y=-33, a la derecha hasta x=lw+15) y la sombra
     d=f'M14 0 C {lw*.21} -26, {lw*.33} 22, {lw*.5} 2 S {lw*.81} -24, {lw-12} 2'
-    return f'''<svg width="{lw+20}" height="44" viewBox="-8 -30 {lw+20} 44" style="filter:drop-shadow(0 1px 4px rgba(0,0,0,.5));display:block">
-<circle cx="0" cy="0" r="5" fill="{ARENA}"/><path d="{d}" fill="none" stroke="{ARENA}" stroke-width="3" stroke-linecap="round" stroke-dasharray="9 8"/>
-<path d="M{lw} 6 c-9 -12 -14 -17 -14 -24 a14 14 0 0 1 28 0 c0 7 -5 12 -14 24z" fill="none" stroke="{ARENA}" stroke-width="2.8"/><circle cx="{lw}" cy="-18" r="4.5" fill="{ARENA}"/></svg>'''
-def html(foto=None,titulo='',lugar='',etiqueta='',texto=True):
+    f='filter:drop-shadow(0 1px 4px rgba(0,0,0,.5));' if sombra else ''
+    return f'''<svg width="{lw+34}" height="56" viewBox="-12 -42 {lw+34} 56" style="{f}display:block;overflow:visible">
+<circle cx="0" cy="0" r="5" fill="{col}"/><path d="{d}" fill="none" stroke="{col}" stroke-width="3" stroke-linecap="round" stroke-dasharray="9 8"/>
+<path d="M{lw} 6 c-9 -12 -14 -17 -14 -24 a14 14 0 0 1 28 0 c0 7 -5 12 -14 24z" fill="none" stroke="{col}" stroke-width="2.8" stroke-linejoin="round"/><circle cx="{lw}" cy="-18" r="4.5" fill="{col}"/></svg>'''
+def html(estilo='ventana',foto=None,titulo='',lugar='',etiqueta='',texto=True):
     fuentes=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','fuentes')
+    img=''
+    if foto:
+        mime=mimetypes.guess_type(foto)[0] or 'image/jpeg'
+        img=f'url(data:{mime};base64,{base64.b64encode(open(foto,"rb").read()).decode()})'
     css=f'''@font-face{{font-family:CG;src:url(file://{fuentes}/CG.ttf);font-weight:300 700}}
 @font-face{{font-family:JS;src:url(file://{fuentes}/JS.ttf);font-weight:100 700}}
 html,body{{margin:0;background:transparent}}
 #m{{position:relative;width:1280px;height:720px;overflow:hidden;font-family:CG}}
-#foto{{position:absolute;inset:0;background-size:cover;background-position:center}}
-#deg{{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,26,38,.5) 0%,rgba(20,26,38,0) 22%),linear-gradient(to top,rgba(20,26,38,.74) 0%,rgba(20,26,38,.38) 30%,rgba(20,26,38,0) 56%)}}
-#marco{{position:absolute;inset:24px;border:3px solid rgba(242,238,230,.92);border-radius:26px;box-shadow:0 0 12px rgba(0,0,0,.25),inset 0 0 12px rgba(0,0,0,.18)}}
-#et{{position:absolute;left:62px;top:56px;font-family:JS;font-weight:600;font-size:22px;letter-spacing:6px;color:{CREMA};text-shadow:{SOMBRA}}}
-#tx{{position:absolute;left:66px;right:66px;bottom:60px;color:{CREMA}}}
-#ti{{font-weight:600;font-size:110px;line-height:.98;text-wrap:balance;max-width:1080px;text-shadow:{SOMBRA};font-variant-numeric:lining-nums}}
-#ca{{margin:10px 0 4px 4px}}
-#lu{{font-family:JS;font-weight:600;font-size:26px;letter-spacing:8px;margin-left:4px;text-shadow:{SOMBRA}}}'''
-    fondo=''
-    if foto:
-        mime=mimetypes.guess_type(foto)[0] or 'image/jpeg'
-        fondo=f'<div id="foto" style="background-image:url(data:{mime};base64,{base64.b64encode(open(foto,"rb").read()).decode()})"></div>'
-    cuerpo=f'<div id="et">{etiqueta}</div><div id="tx"><div id="ti">{titulo}</div><div id="ca">{camino()}</div><div id="lu">{lugar}</div></div>' if texto else ''
-    # el título se achica solo si no entra en dos líneas
-    js='''const t=document.getElementById('ti'); if(t){let s=110; while(t.offsetHeight>2*s*1.0+4 && s>56){s-=4; t.style.fontSize=s+'px';}}'''
-    return f'<html><head><meta charset="utf-8"><style>{css}</style></head><body><div id="m">{fondo}<div id="deg"></div><div id="marco"></div>{cuerpo}</div><script>{js}</script></body></html>'
+#foto{{position:absolute;inset:0;background:{img or 'none'} center/cover}}
+#ti{{font-weight:600;line-height:.98;text-wrap:balance;font-variant-numeric:lining-nums}}
+.js{{font-family:JS;font-weight:600}}
+.sh{{text-shadow:{SOMBRA}}}'''
+    if estilo=='ventana':
+        tam,lineas=92,3
+        cuerpo=f'''<div id="m" style="background:{CREMA}">
+<div id="foto" style="left:44px;top:44px;width:700px;height:632px;border-radius:30px;box-shadow:0 0 0 2px rgba(42,44,39,.18)"></div>
+<div style="position:absolute;left:800px;right:40px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;color:{TINTA}">
+<div class="js" style="font-size:20px;letter-spacing:6px;color:{ARENA_OSC};margin-bottom:26px">{etiqueta}</div>
+<div id="ti" style="font-size:{tam}px">{titulo}</div>
+<div style="margin:16px 0 4px -2px">{camino(300,ARENA_OSC,False)}</div>
+<div class="js" style="font-size:24px;letter-spacing:7px">{lugar}</div></div></div>'''
+    elif estilo=='minima':
+        tam,lineas=112,2
+        cuerpo=f'''<div id="m"><div id="foto"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(20,26,38,.7),rgba(20,26,38,0) 50%)"></div>
+<div style="position:absolute;left:60px;right:60px;bottom:54px;text-align:center;color:{CREMA}">
+<div id="ti" class="sh" style="font-size:{tam}px">{titulo}</div>
+<div style="display:flex;justify-content:center;margin:12px 0 2px">{camino(300)}</div>
+<div class="js sh" style="font-size:26px;letter-spacing:9px">{lugar}</div></div></div>'''
+    else:  # marco
+        tam,lineas=110,2
+        txt=f'''<div class="js sh" style="position:absolute;left:62px;top:56px;font-size:22px;letter-spacing:6px;color:{CREMA}">{etiqueta}</div>
+<div style="position:absolute;left:66px;right:66px;bottom:60px;color:{CREMA}"><div id="ti" class="sh" style="font-size:{tam}px;max-width:1080px">{titulo}</div>
+<div style="margin:8px 0 2px 0">{camino(300)}</div><div class="js sh" style="font-size:26px;letter-spacing:8px;margin-left:4px">{lugar}</div></div>''' if texto else ''
+        cuerpo=f'''<div id="m">{'<div id="foto"></div>' if img else ''}
+<div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,26,38,.5) 0%,rgba(20,26,38,0) 22%),linear-gradient(to top,rgba(20,26,38,.74) 0%,rgba(20,26,38,.38) 30%,rgba(20,26,38,0) 56%)"></div>
+<div style="position:absolute;inset:24px;border:3px solid rgba(242,238,230,.92);border-radius:26px;box-shadow:0 0 12px rgba(0,0,0,.25),inset 0 0 12px rgba(0,0,0,.18)"></div>{txt}</div>'''
+    # el título se achica solo si no entra en el máximo de líneas del estilo
+    js=f'''const t=document.getElementById('ti'); if(t){{let s={tam}; while(t.offsetHeight>{lineas}*s*1.0+4 && s>48){{s-=4; t.style.fontSize=s+'px';}}}}'''
+    return f'<html><head><meta charset="utf-8"><style>{css}</style></head><body>{cuerpo}<script>{js}</script></body></html>'
 async def render(path,doc,transparente):
+    tmp=os.path.join(os.path.dirname(os.path.abspath(__file__)),'_m.html'); open(tmp,'w').write(doc)
     async with async_playwright() as p:
         b=await p.chromium.launch(); pg=await b.new_page(viewport={'width':1280,'height':720})
-        tmp=os.path.join(os.path.dirname(os.path.abspath(__file__)),'_m.html'); open(tmp,'w').write(doc)
         await pg.goto('file://'+tmp); await pg.evaluate('document.fonts.ready'); await pg.wait_for_timeout(200)
         jpg=path.lower().endswith(('.jpg','.jpeg'))
         await pg.screenshot(path=path,omit_background=transparente and not jpg,type='jpeg' if jpg else 'png',**({'quality':92} if jpg else {}))
         await b.close()
     os.remove(tmp)
 if __name__=='__main__':
-    a=argparse.ArgumentParser(description='Miniatura de YouTube con el marco de Elita')
+    a=argparse.ArgumentParser(description='Miniatura de YouTube con la estética de Elita')
     a.add_argument('foto',nargs='?'); a.add_argument('titulo',nargs='?',default=''); a.add_argument('lugar',nargs='?',default='')
+    a.add_argument('--estilo',choices=['ventana','minima','marco'],default='ventana')
     a.add_argument('--lang',choices=['ES','EN'],default='EN'); a.add_argument('--etiqueta',help='texto de arriba (por defecto 4K · AMBIENT SOUND / SONIDO AMBIENTE; "" para ninguno)')
-    a.add_argument('--marco',action='store_true',help='solo el marco, sin foto ni texto (PNG transparente)')
+    a.add_argument('--marco',action='store_true',help='solo el marco del estilo "marco", sin foto ni texto (PNG transparente)')
     a.add_argument('-o','--salida',default='miniatura.jpg')
     o=a.parse_args()
     et=ETIQUETA[o.lang] if o.etiqueta is None else o.etiqueta
-    doc=html(None if o.marco else o.foto,o.titulo,o.lugar.upper(),et,texto=not o.marco)
-    asyncio.run(render(o.salida,doc,transparente=o.marco or not o.foto))
+    if o.marco: doc=html('marco',None,texto=False)
+    else: doc=html(o.estilo,o.foto,o.titulo,o.lugar.upper(),et)
+    asyncio.run(render(o.salida,doc,transparente=o.marco))
