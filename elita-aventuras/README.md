@@ -8,7 +8,7 @@ Identidad visual del canal de YouTube **Elita Adventures**: caminatas por calles
 
 - `entregables/Elita-Logo-camino/`: logo final (camino punteado, continuo y de puntos; muy sobrio y color; claro, oscuro y transparente).
 - `entregables/Elita-YouTube-ES-EN/`: banners 2560×1440 (ES y EN, crema y noche) y fotos de perfil 800×800.
-- `entregables/Elita-Marca-de-agua/`: marcas de agua en PNG transparente ("Elita" con camino y monograma "E"), en crema y tinta, con y sin sombra.
+- `entregables/Elita-Marca-de-agua/`: marcas de agua en PNG transparente ("Elita" con camino, monograma "E" y "ADVENTURES" con camino), en crema y tinta; la versión `_video` lleva un halo oscuro suave para leerse sobre cualquier escena.
 - `scripts/`: generadores en SVG renderizados con Playwright.
 - `fuentes/`: Cormorant Garamond y Josefin Sans (Google Fonts, licencia OFL; ver `OFL-*.txt`).
 - `CONTEXTO.md`: decisiones de diseño, paleta y pendientes.
