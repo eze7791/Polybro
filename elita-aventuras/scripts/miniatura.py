@@ -1,11 +1,11 @@
 import argparse, asyncio, base64, mimetypes, os
 from playwright.async_api import async_playwright
-# Miniatura de YouTube (1280x720) con la estética de Elita. Tres estilos:
+# Miniatura de YouTube (1280x720) con la estética de Elita. Tres estilos (el elegido es "marco"):
+#   marco:   foto completa con borde crema redondeado, etiqueta arriba y texto abajo a la izquierda.
 #   ventana: la foto dentro de una ventana redondeada (como las del logo) sobre crema, texto al costado en tinta.
 #   minima:  foto completa sin marco, título centrado abajo con el camino punteado y el lugar.
-#   marco:   foto completa con borde crema redondeado, etiqueta arriba y texto abajo a la izquierda.
 # Uso:
-#   python3 miniatura.py foto.jpg "Waterstown Park" "Dublín · Irlanda" --lang ES --estilo ventana -o mini.jpg
+#   python3 miniatura.py foto.jpg "Waterstown Park" "Dublín · Irlanda" --lang ES -o mini.jpg
 #   python3 miniatura.py foto.jpg "Waterstown Park" "Dublin · Ireland" --estilo minima -o mini.jpg
 #   python3 miniatura.py --marco -o marco.png        (solo el marco del estilo "marco", PNG transparente)
 ETIQUETA={'ES':'4K · SONIDO AMBIENTE','EN':'4K · AMBIENT SOUND'}
@@ -72,7 +72,7 @@ async def render(path,doc,transparente):
 if __name__=='__main__':
     a=argparse.ArgumentParser(description='Miniatura de YouTube con la estética de Elita')
     a.add_argument('foto',nargs='?'); a.add_argument('titulo',nargs='?',default=''); a.add_argument('lugar',nargs='?',default='')
-    a.add_argument('--estilo',choices=['ventana','minima','marco'],default='ventana')
+    a.add_argument('--estilo',choices=['marco','ventana','minima'],default='marco')
     a.add_argument('--lang',choices=['ES','EN'],default='EN'); a.add_argument('--etiqueta',help='texto de arriba (por defecto 4K · AMBIENT SOUND / SONIDO AMBIENTE; "" para ninguno)')
     a.add_argument('--marco',action='store_true',help='solo el marco del estilo "marco", sin foto ni texto (PNG transparente)')
     a.add_argument('-o','--salida',default='miniatura.jpg')
