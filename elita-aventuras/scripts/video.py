@@ -3,8 +3,8 @@ from playwright.async_api import async_playwright
 import yt as Y
 # Opening (logo animado) y pantalla final para los videos.
 # Se dibuja un SVG con ids, una función JS lo pone en el instante t, y cada cuadro se captura con
-# Playwright; ffmpeg arma el MP4. Uso: python3 video.py [1080|4K]
-FPS=30
+# Playwright; ffmpeg arma el MP4. Uso: python3 video.py [1080|4K] [fps]  (por defecto 4K 60)
+FPS=60
 W,H,G=Y.W,Y.H,Y.G
 TEMAS={'crema':dict(bg='#F2EEE6',ink='#2A2C27',sand='#8C6A3C'),
        'noche':dict(bg='#1A2236',ink='#EEE7DA',sand='#C9A978')}
@@ -72,9 +72,10 @@ const E=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3), seg=(t,a,b)=>(t-a)/(b-a);
 window.setT=t=>{ [['vw',.0,1.0],['tx',.5,1.5],['sb',1.0,2.0]].forEach(([id,a,b])=>{
   const g=document.getElementById(id),p=E(seg(t,a,b)); g.setAttribute('opacity',p); g.style.transform=`translateY(${(1-p)*16}px)`;});};'''
 FINAL_ANIM=2.0; FINAL_DUR=20.0
-async def main(res):
+async def main(res,fps):
+    global FPS; FPS=fps
     dsf={'1080':1,'4K':2}[res]
-    out=f'video/{res}'; os.makedirs(out,exist_ok=True)
+    out=f'video/{res}-{fps}fps'; os.makedirs(out,exist_ok=True)
     async with async_playwright() as p:
         b=await p.chromium.launch(); pg=await b.new_page(viewport={'width':1920,'height':1080},device_scale_factor=dsf)
         async def load(svg,js):
@@ -89,7 +90,7 @@ async def main(res):
         def mp4(d,path,hold=0):
             vf=f'tpad=stop_mode=clone:stop_duration={hold},' if hold else ''
             subprocess.run(['ffmpeg','-y','-loglevel','error','-framerate',str(FPS),'-i',f'{d}/%05d.png','-vf',vf+'format=yuv420p',
-                            '-c:v','libx264','-crf','14','-preset','slow','-movflags','+faststart',path],check=True)
+                            '-c:v','libx264','-crf','16','-preset','slow','-r',str(FPS),'-movflags','+faststart',path],check=True)
         for tema,c in TEMAS.items():
             await load(opening(**c),JS_OPENING)
             mp4(await frames(OPENING_DUR),f'{out}/opening_{tema}.mp4')
@@ -102,4 +103,4 @@ async def main(res):
                 await pg.screenshot(path=f'{out}/pantalla-final_{lang}_{tema}_guias.png')
         await b.close()
     shutil.rmtree('_frames',ignore_errors=True); os.remove('_v.html')
-if __name__=="__main__": asyncio.run(main(sys.argv[1] if len(sys.argv)>1 else '1080'))
+if __name__=="__main__": asyncio.run(main(sys.argv[1] if len(sys.argv)>1 else '4K',int(sys.argv[2]) if len(sys.argv)>2 else 60))
