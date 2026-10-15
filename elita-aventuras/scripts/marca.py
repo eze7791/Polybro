@@ -52,6 +52,12 @@ def preview():
             out+=f'<g transform="translate({x+CW-w*sc-CW*.025},{y+CH-h*sc-CH*.03}) scale({sc})" opacity=".8"><g filter="url(#sh)">{m}</g></g>'
     W=5*CW+4*GAP; H=3*CH+2*GAP
     return W,H,f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"><defs>{HALO}<filter id="sat"><feColorMatrix type="saturate" values="{Y.SAT}"/></filter><linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9dee0"/><stop offset="1" stop-color="#f4f5f3"/></linearGradient></defs><rect width="{W}" height="{H}" fill="#fff"/>{out}</svg>'
+# Marca elegida (ADVENTURES + camino) ya ubicada en un cuadro completo transparente:
+# se arrastra a la pista de arriba en Premiere sin escalar ni mover. Opacidad 80 % incluida.
+def cuadro(fw,fh):
+    w,h,m=adventures('#F2EEE6','#F2EEE6')
+    sc=fw*.16/740
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="{fw}" height="{fh}"><defs>{HALO}</defs><g transform="translate({fw-w*sc-fw*.025},{fh-h*sc-fh*.03}) scale({sc})" opacity=".8"><g filter="url(#sh)">{m}</g></g></svg>'
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch()
@@ -68,6 +74,8 @@ async def main():
                     w,h,s=svg(fn,ink,sand,video)
                     await r(pg,f'marca/{dname}/{cname}{"_video" if video else ""}.png',s,w,h)
         pv=await b.new_page()
+        for nombre,fw,fh in [('1080p',1920,1080),('4K',3840,2160)]:
+            await r(pv,f'marca/elegida-adventures-camino/marca-de-agua_{nombre}.png',cuadro(fw,fh),fw,fh)
         W,H,s=preview()
         await r(pv,'marca/vista-previa.png',s,W,H,False)
         await b.close()

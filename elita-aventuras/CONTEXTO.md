@@ -50,7 +50,7 @@ No elegida: "Elita-Logo-camino-v2" (curva más marcada y opción sin punto ni pi
 ## Pendiente
 
 - Ivan elige el banner (A/B/C o ES/EN), el fondo (crema o noche) y el color de la foto de perfil.
-- Marca de agua (`marca.py`, `entregables/Elita-Marca-de-agua/`): 3 diseños, "Elita" + camino, monograma "E" y "ADVENTURES" + camino. Para video usar `crema_video.png` (halo oscuro suave: se lee sobre cielo claro, lluvia y noche). Falta que Ivan elija. En Premiere: esquina inferior derecha, opacidad 80 %, ancho ~12 % del cuadro (~16 % para ADVENTURES, ~7,5 % el monograma).
+- ~~Marca de agua~~ **Elegida: "ADVENTURES" + camino punteado** (`entregables/Elita-Marca-de-agua/elegida-adventures-camino/`, cuadros completos transparentes 1080p y 4K, opacidad 80 % incluida: se arrastran a la pista de arriba en Premiere sin escalar). Encaja con la regla de no repetir "Elita" en todos lados. Las otras (Elita + camino, monograma) quedan como alternativas.
 - Pantalla final y marco de miniatura.
 - Intro y outro animados con las 4 ventanas.
 
