@@ -46,3 +46,16 @@ En una secuencia 1080p, la mitad de cada valor.
 - Abajo a la izquierda, con margen de 5 % (≈ 190 px en 4K) del borde.
 - 5 a 7 segundos en pantalla, con fundido de entrada y salida de 0,5 s.
 - Máximo dos líneas de texto; una placa a la vez.
+
+## Ícono de ubicación + texto (texto a 115 en 4K)
+
+Archivos en `ubicacion/`: `ubicacion-icono_4K.png` (el ícono ya ubicado) y `guia-texto_4K.png` (líneas rojas temporales). En 1080p, los `_1080p.png`.
+
+| | 4K | 1080p |
+|---|---|---|
+| Ícono | PNG a cuadro completo, escala 100 %, posición sin tocar | igual |
+| Texto: inicio (izquierda) | X = 380 | X = 190 |
+| Texto: línea base (donde se apoyan las letras) | Y = 1900 | Y = 950 |
+| Tamaño | 115 | 57,5 |
+
+Alineación a la izquierda. Con la guía encima, mové el texto hasta que arranque en la línea roja vertical y se apoye en la horizontal; después borrá la guía y guardalo como plantilla.
