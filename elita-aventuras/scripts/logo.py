@@ -29,8 +29,6 @@ P['ar_ba']=f'''
 <path d="M58 320 L101 233 L119 233 L162 320Z" fill="#9c8c8e"/>
 <path d="M110 244 V320" stroke="#efe6da" stroke-width="2" stroke-dasharray="8 8"/>
 <path d="M104 92 L110 70 L116 92 L119 234 L101 234Z" fill="#efe6da"/><path d="M110 70 L116 92 L119 234 L110 234Z" fill="#cdbfb5"/>
-<line x1="80" y1="234" x2="80" y2="168" stroke="#4a3b3a" stroke-width="1.6"/>
-<g transform="translate(80.8,168.5)"><rect width="21" height="4.6" fill="#74acdf"/><rect y="4.6" width="21" height="4.6" fill="#f6f4ee"/><rect y="9.2" width="21" height="4.6" fill="#74acdf"/><circle cx="10.5" cy="6.9" r="1.6" fill="#f2c14e"/></g>
 {jacaranda(32,214,1.25)}{jacaranda(192,222,1.15)}
 <g fill="#b3a0d6" opacity=".9"><circle cx="30" cy="300" r="3"/><circle cx="48" cy="292" r="2.5"/><circle cx="178" cy="304" r="3"/><circle cx="196" cy="296" r="2.4"/><circle cx="60" cy="310" r="2"/></g>'''
 P['ar_pat']=f'''
@@ -54,7 +52,7 @@ P['de']=f'''
 <path d="M96 72 L110 92 L102 90 L96 100 L88 88 L82 92Z M40 110 L50 124 L44 122 L36 128 L33 120Z M150 98 L160 110 L152 108 L146 114Z" fill="#f5f7f8"/>
 <path d="M0 210 Q50 170 110 190 T220 180 V320 H0Z" fill="#5f7d5e"/>
 <g>{''.join(pine(x,y,h,'#46634a') for x,y,h in [(14,222,40),(34,214,34),(186,212,36),(206,220,42),(170,226,30)])}</g>
-<path d="M58 260 Q70 214 88 200 L100 192 L130 190 L144 204 Q160 230 170 260Z" fill="#6e8a63"/><path d="M88 200 L100 192 L112 192 L98 226 L80 240Z" fill="#7f9b72"/>{''.join(pine(x,y,h,'#4c6a4f') for x,y,h in [(62,262,30),(76,266,26),(156,262,28),(170,268,32)])}
+<path d="M58 260 Q70 214 88 200 L100 192 L130 190 L144 204 Q160 230 170 260Z" fill="#6e8a63"/>{''.join(pine(x,y,h,'#4c6a4f') for x,y,h in [(62,262,30),(76,266,26),(156,262,28),(170,268,32)])}
 <g fill="#ece6dc"><rect x="96" y="150" width="36" height="44"/><rect x="88" y="130" width="12" height="64"/><rect x="128" y="138" width="11" height="56"/><rect x="108" y="118" width="14" height="40"/></g>
 <g fill="#6f8698"><path d="M86 130 L94 108 L102 130Z"/><path d="M126 138 L133.5 118 L141 138Z"/><path d="M106 118 L115 92 L124 118Z"/><path d="M94 150 L114 138 L134 150Z"/></g>
 <path d="M108.5 194 V183 a5.5 5.5 0 0 1 11 0 V194Z" fill="#6f7f8c"/>

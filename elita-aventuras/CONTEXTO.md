@@ -15,12 +15,12 @@ Textos definitivos del banner: "Calles y caminos, sólo con sonido ambiente" (co
 
 Arriba, 4 ventanas (paneles verticales con esquinas redondeadas, 220×320, separación 20), en el orden de un día:
 
-1. Argentina al amanecer: Buenos Aires con el Obelisco, jacarandás lilas, sol bajo, cielo lila → durazno. La avenida llega hasta la base del Obelisco y hay una bandera argentina chica en un mástil.
+1. Argentina al amanecer: Buenos Aires con el Obelisco, jacarandás lilas, sol bajo, cielo lila → durazno. La avenida llega hasta la base del Obelisco.
 2. Alemania de día: castillo blanco con torres de techo azul pizarra y puerta en arco, sobre una colina verde, Alpes nevados y pinos.
 3. Irlanda con lluvia: colinas verdes, ovejas de cara negra, torre en ruinas apoyada detrás de la cresta de la colina, lluvia en diagonal (sin muros de piedra).
 4. Noche: auroras verdes, luna creciente, estrellas, montaña, lago con reflejo de la aurora y pinos.
 
-Ajustes del 15/10 (pedido de Ivan, sin cambiar la estética): calle hasta el Obelisco + bandera, colina del castillo verde + puerta, torre de Irlanda sin flotar y sin las líneas crema de los muros, sin el óvalo gris del lago. Se regeneraron logo, banners, vista previa de la marca de agua y opening (el closing y las fotos de perfil no usan las ventanas).
+Ajustes del 15/10 (pedido de Ivan, sin cambiar la estética): (se probó una bandera argentina y una cara más clara en la colina de Alemania; Ivan pidió sacarlas) calle hasta el Obelisco, colina del castillo verde (un solo tono) + puerta, torre de Irlanda sin flotar y sin las líneas crema de los muros, sin el óvalo gris del lago. Se regeneraron logo, banners, vista previa de la marca de agua y opening (el closing y las fotos de perfil no usan las ventanas).
 
 Descartado: Argentina con Patagonia (`ar_pat` en `logo.py`). Ivan eligió Buenos Aires.
 
