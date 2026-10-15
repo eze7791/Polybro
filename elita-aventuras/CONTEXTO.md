@@ -49,6 +49,12 @@ No elegida: "Elita-Logo-camino-v2" (curva más marcada y opción sin punto ni pi
 - Kit de overlays sobrios para video (Cormorant + Josefin, hueso `#F2EEE6` + arena `#D2B587`), con versiones por temporada.
 - Placas de Waterstown Park (Dublín 20), EN y ES, 1080p y 4K: lugar, clima, historia del Silver Bridge de los Guinness, ¿sabías que?, tip y nota. Sombra suave detrás. Es el estilo de texto de los videos.
 
+## Agregados para video (`agregados.py`, `entregables/Elita-Agregados/`)
+
+- 24 iconos de línea (ubicación, ruta, clima, temperatura, reloj, árbol, pino, montaña, agua, puente, historia, info, cámara, café, pájaro, ciudad, pasos…) en crema con halo para video y en tinta; `hoja-de-iconos.png` los muestra todos.
+- Placas 4K transparentes (cuadro completo, placa abajo a la izquierda) ES y EN: lugar, clima, ¿sabías que?, historia, tip, recorrido y nota firmada "— Elita". Textos de ejemplo genéricos. Placa nueva: `python3 agregados.py placa --tipo clima --icono lluvia --titulo "9°C · Llovizna" --texto "..." --lang ES -o placa.png`.
+- Pedido de Ivan: letra grande y gruesa para que se lea en todos los videos → Cormorant **Bold** (recta; cursiva solo en la nota), Josefin **Bold** en etiquetas, crema `#F2EEE6` + arena `#D2B587`, sombra azul noche fuerte y suave. Resumen en `GUIA-TEXTO.md`.
+
 ## Pendiente
 
 - Ivan elige el banner (A/B/C o ES/EN), el fondo (crema o noche) y el color de la foto de perfil.
