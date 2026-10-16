@@ -7,7 +7,7 @@ import agregados as A
 PAPEL='#F4EEE2'; TINTA='#2A2C27'
 # Un solo color general para todo (el arena del logo); lo que cambia por época son los iconitos de arriba.
 GENERAL=dict(c='#9A7444',o='#5E4626',s='#E3CFA6',c2='#D2B587')
-PAL={t:GENERAL for t in ('otono','halloween','invierno','verano','invierno_a','invierno_b','verano_a','verano_b','primavera','navidad','sanpatricio')}
+PAL={t:GENERAL for t in ('otono','halloween','invierno','verano','invierno_a','invierno_b','verano_a','verano_b','verano_mar','primavera','navidad','sanpatricio')}
 def ico(n,col,tam,sw=2.4): return A.icono(n,col,tam,sw)
 # ---------- decoraciones chicas por temporada ----------
 def hoja_arce(x,y,s,r,c):
@@ -61,7 +61,7 @@ DECO={  # (junto a la punta del cartel, junto al círculo de clima, esquina de l
 }
 # Un solo iconito por pieza, dentro del papel beige (a la derecha, centrado en alto).
 # tamaño natural aproximado de cada dibujo (lado mayor a escala 1) para llevarlos todos al mismo tamaño
-TAM={hoja_arce:50,hoja_oval:40,calabaza:68,murcielago:42,fantasma:44,muneco:52,copo2:44,gorro:48,taza:42,sombrilla:58,sol:74,helado:56,tulipan:48,mariposa:52,acebo:50,bola:42,trebol:46,galera:50}
+TAM={mar:62,caracola:38,hoja_arce:50,hoja_oval:40,calabaza:68,murcielago:42,fantasma:44,muneco:52,copo2:44,gorro:48,taza:42,sombrilla:58,sol:74,helado:56,tulipan:48,mariposa:52,acebo:50,bola:42,trebol:46,galera:50}
 def _ic(fn,*extra):
     def f(x,y,obj):
         sc=obj/TAM[fn]
@@ -78,6 +78,7 @@ ICONO1={  # cartel, píldora, nota
  'invierno_a':(_ic(muneco),_ic(copo2),_ic(copo2)),
  'invierno_b':(_ic(gorro),_ic(copo2),_ic(taza)),
  'verano_a':(_ic(sombrilla),_ic(sol),_ic(sol)),
+ 'verano_mar':(_ic(mar),_ic(sol),_ic(caracola)),
  'verano_b':(_ic(helado),_ic(sol),_ic(helado)),
  'primavera':(_ic(tulipan),_ic(mariposa),_ic(mariposa)),
  'navidad':(_ic(acebo),_ic(bola),_ic(bola)),
@@ -87,7 +88,7 @@ RUIDO='<filter id="papel"><feTurbulence type="fractalNoise" baseFrequency=".9" n
 SOMBRA='filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))'
 # ---------- piezas ----------
 ETIQUETA={'otono':('OTOÑO','AUTUMN'),'halloween':('HALLOWEEN','HALLOWEEN'),'invierno':('INVIERNO','WINTER'),'invierno_a':('INVIERNO','WINTER'),
- 'invierno_b':('INVIERNO','WINTER'),'verano':('VERANO','SUMMER'),'verano_a':('VERANO','SUMMER'),'verano_b':('VERANO','SUMMER'),
+ 'invierno_b':('INVIERNO','WINTER'),'verano':('VERANO','SUMMER'),'verano_a':('VERANO','SUMMER'),'verano_b':('VERANO','SUMMER'),'verano_mar':('VERANO','SUMMER'),
  'primavera':('PRIMAVERA','SPRING'),'navidad':('NAVIDAD','CHRISTMAS'),'sanpatricio':('SAN PATRICIO',"ST. PATRICK'S")}
 CART=dict(cx=110,cy=830,r=58,x0=150,x1=720,alto=96)   # cartel de lugar (abajo a la izquierda)
 def cartel(tema,nombre='',sub='',icono_n='pino',lang='ES'):
