@@ -107,6 +107,13 @@ def cartel(tema,nombre='',sub='',icono_n='pino',lang='ES',x1=None):
         s+=f'<div style="position:absolute;left:{c["x0"]+40}px;top:{y0+14}px;font-family:JS;font-weight:700;font-size:38px;letter-spacing:3px;color:{TINTA}">{nombre}</div>'
         s+=f'<div style="position:absolute;left:{c["x0"]+42}px;top:{y0+54}px;font-family:CG;font-style:italic;font-weight:700;font-size:30px;color:{p["o"]}">{sub}</div>'
     return s
+# Pestaña colgante para el país, debajo del cartel de lugar (mismo color general en todas las temporadas)
+PAIS_ANCHO={'corta':250,'larga':400}
+def pestana_pais(ancho='corta',texto=''):
+    p=GENERAL; c=CART; y1=c['cy']+c['alto']/2; w=PAIS_ANCHO[ancho]
+    s=f'<div style="position:absolute;left:{c["x0"]+30}px;top:{y1-2}px;width:{w}px;height:40px;box-sizing:border-box;background:{PAPEL};border:4px solid {p["o"]};border-top:none;border-radius:0 0 12px 12px;{SOMBRA}"></div>'
+    if texto: s+=f'<svg style="position:absolute;left:0;top:0;overflow:visible" width="1920" height="1080"><text x="{c["x0"]+50}" y="{y1+22.5}" font-family="JS" font-weight="700" font-size="20" letter-spacing="5" fill="{p["o"]}">{texto}</text></svg>'
+    return s
 PILL=dict(cx=110,cy=962,r=44,x0=140,x1=540,alto=66)
 def pildora(tema,texto='',cielo='viento'):
     p=PAL[tema]; c=PILL; y0=c['cy']-c['alto']/2

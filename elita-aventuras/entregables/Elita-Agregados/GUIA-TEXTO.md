@@ -164,3 +164,7 @@ Textos (secuencia 4K), alineados a la izquierda, punto de anclaje 0 · 0, **sin 
 | Nota, línea 2 | Cormorant Garamond Bold Italic | 84 | 0 | `2A2C27` | 2452 · 1667 | −1,6° |
 
 Largos aproximados: cartel corto hasta ~14 letras en mayúsculas ("PHOENIX PARK"), largo hasta ~24 ("ST STEPHEN'S GREEN"); clima hasta ~22 caracteres; cada línea de la nota hasta ~34.
+
+### Pestaña del país (debajo del cartel)
+`sendero-kit/pais/pestana-pais_corta_4K.png` (hasta ~9 letras, "IRLANDA") y `pestana-pais_larga_4K.png` (hasta ~16, "UNITED KINGDOM"). Sirve para todas las temporadas. Escala 100 %.
+Texto: Josefin Sans Bold, 40, seguimiento 250, MAYÚSCULAS, color `5E4626`, alineado a la izquierda, posición 400 · 1801 (línea base), sin sombra. En 1080p: 20 y 200 · 900,5.
