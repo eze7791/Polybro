@@ -146,7 +146,7 @@ Textos (secuencia 4K; en 1080p, PNG a escala 50 % y la mitad de cada número), c
 ## Kit sendero (cartel de lugar, píldora de clima y nota de Elita)
 
 Un solo color general (arena) y un iconito de la temporada en cada pieza. Archivos en `sendero-kit/<temporada>/`:
-- `ES/` y `EN/`: `cartel-corto_4K.png` y `cartel-largo_4K.png` (con la pestaña OTOÑO / AUTUMN, etc.).
+- `ES/` y `EN/`: `cartel-corto_<lugar>_4K.png` y `cartel-largo_<lugar>_4K.png` (con la pestaña OTOÑO / AUTUMN, etc.). Lugares (ícono del círculo): parque, bosque, ciudad, pueblo, museo, iglesia, castillo, monumento, mercado, pub, cafe, playa, faro, montana, lago-rio, puente, jardin (ver `ejemplos/iconos-de-lugar.png`).
 - `clima_<cielo>_4K.png`: píldora con el ícono del cielo (despejado, parcial, nublado, lluvia, niebla, viento, nieve, noche-despejada).
 - `nota_4K.png`: papel con cintas, camino punteado y firma "— ELITA" ya puesta.
 

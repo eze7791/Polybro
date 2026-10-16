@@ -34,6 +34,16 @@ I={
  'pajaro':'<path d="M6 22 q7 -7 12 2 q5 -9 12 -2"/><path d="M24 33 q4.5 -5 8 1 q3.5 -6 8 -1"/>',
  'ciudad':'<path d="M5 42 h38"/><path d="M8 42 V22 h10 v20 M18 42 V10 h12 v32 M30 42 V18 h10 v24"/><path d="M22 16 h4 M22 22 h4 M22 28 h4 M12 28 h2 M34 24 h2 M34 30 h2"/>',
  'calendario':'<rect x="7" y="10" width="34" height="31" rx="4"/><path d="M7 19 h34 M16 6 v8 M32 6 v8"/><circle cx="17" cy="27" r="1.7" fill="currentColor"/><circle cx="24" cy="27" r="1.7" fill="currentColor"/><circle cx="31" cy="27" r="1.7" fill="currentColor"/><circle cx="17" cy="34" r="1.7" fill="currentColor"/><circle cx="24" cy="34" r="1.7" fill="currentColor"/>',
+ 'museo':'<path d="M6 18 L24 8 L42 18Z"/><path d="M8 41 h32 M10 37 h28"/><path d="M13 22 v13 M21 22 v13 M27 22 v13 M35 22 v13"/>',
+ 'iglesia':'<path d="M24 3 v8 M20.5 6.5 h7"/><path d="M16 22 L24 12 L32 22"/><path d="M16 22 V42 H32 V22"/><path d="M16 30 L9 33 V42 H16 M32 30 L39 33 V42 H32"/><path d="M6 42 h36"/><path d="M21 42 v-7 a3 3 0 0 1 6 0 v7"/>',
+ 'castillo':'<path d="M7 42 V17 h5 v4 h4 v-4 h4 v9 h8 v-9 h4 v4 h4 v-4 h5 v25z"/><path d="M20 42 v-7 a4 4 0 0 1 8 0 v7"/><path d="M5 42 h38"/>',
+ 'monumento':'<path d="M24 4 L28 11 L30 37 H18 L20 11 Z"/><path d="M12 42 h24 M15 37 h18"/>',
+ 'mercado':'<path d="M6 17 h36 l-3 -8 H9z"/><path d="M6 17 q4.5 5 9 0 q4.5 5 9 0 q4.5 5 9 0 q4.5 5 9 0"/><path d="M9 21 V41 H39 V21"/><path d="M15 41 v-10 h8 v10 M28 28 h6"/>',
+ 'pub':'<path d="M14 11 h20 l-3 31 H17z"/><path d="M14.6 18 h18.8"/><path d="M15 11 q2 -5 6 -3 q3 -4 7 -1 q4 -2 6 3"/>',
+ 'pueblo':'<path d="M4 42 h40"/><path d="M8 42 V26 L16 18 L24 26 V42"/><path d="M24 42 V31 L32 23 L40 31 V42"/><path d="M14 42 v-7 h4 v7 M30 35 h4"/>',
+ 'faro':'<path d="M18 42 L20 17 H28 L30 42Z"/><path d="M17 17 h14 M19.5 17 v-6 h9 v6 M24 11 V7"/><path d="M19.4 26 h9.2 M18.8 34 h10.4"/><path d="M7 9 l8 4 M41 9 l-8 4"/>',
+ 'playa':'<path d="M24 22 L28 39"/><path d="M8 22 C10 9 35 6 40 18 Z"/><path d="M4 43 q5 -4 10 0 t10 0 t10 0 t10 0"/>',
+ 'jardin':'<circle cx="24" cy="16" r="3.5"/><circle cx="24" cy="8.5" r="4"/><circle cx="31.5" cy="16" r="4"/><circle cx="24" cy="23.5" r="4"/><circle cx="16.5" cy="16" r="4"/><path d="M24 28 V43 M24 37 q-7 -1 -9 -7 M24 39 q7 -1 9 -7"/>',
  'pasos':'<ellipse cx="17" cy="15" rx="4.5" ry="7"/><path d="M14.5 26 h5"/><ellipse cx="31" cy="27" rx="4.5" ry="7"/><path d="M28.5 38 h5"/>',
 }
 def icono(nombre,col=CREMA,tam=48,sw=2.4):

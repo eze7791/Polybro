@@ -139,6 +139,10 @@ def escena(tema,lang,textos=True,fondo=''):
     cielo={'otono':'viento','halloween':'niebla','navidad':'nieve','sanpatricio':'nublado','primavera':'parcial'}.get(tema,'nieve' if tema.startswith('invierno') else 'despejado')
     b=cartel(tema,e['nombre'],e['sub'],lang=lang)+pildora(tema,e['clima'],cielo)+nota(tema,e['l1'],e['l2'])
     return f'<div style="position:relative;width:1920px;height:1080px;{fondo}">{b}</div>'
+# Ícono del círculo del cartel según el tipo de lugar (nombre del archivo → ícono)
+LUGARES={'parque':'arbol','bosque':'pino','ciudad':'ciudad','pueblo':'pueblo','museo':'museo','iglesia':'iglesia','castillo':'castillo',
+ 'monumento':'monumento','mercado':'mercado','pub':'pub','cafe':'cafe','playa':'playa','faro':'faro','montana':'montana','lago-rio':'agua',
+ 'puente':'puente','jardin':'jardin'}
 # ---------- kit final: piezas sueltas, cuadro completo 4K transparente, sin texto ----------
 KIT={'otono':'otono','halloween':'halloween','invierno-muneco':'invierno_a','invierno-gorro':'invierno_b','primavera':'primavera',
      'verano-mar':'verano_mar','verano-sombrilla':'verano_a','navidad':'navidad','sanpatricio':'sanpatricio'}
@@ -148,13 +152,19 @@ def kit(out='sendero-kit'):
     jobs=[]
     for nombre,t in KIT.items():
         for l in ('ES','EN'):
-            jobs.append((f'{out}/{nombre}/{l}/cartel-corto_4K.png',cuadro(cartel(t,lang=l)),(1920,1080),2))
-            jobs.append((f'{out}/{nombre}/{l}/cartel-largo_4K.png',cuadro(cartel(t,lang=l,x1=CARTEL_LARGO)),(1920,1080),2))
+            for lug,ic in LUGARES.items():
+                jobs.append((f'{out}/{nombre}/{l}/cartel-corto_{lug}_4K.png',cuadro(cartel(t,icono_n=ic,lang=l)),(1920,1080),2))
+                jobs.append((f'{out}/{nombre}/{l}/cartel-largo_{lug}_4K.png',cuadro(cartel(t,icono_n=ic,lang=l,x1=CARTEL_LARGO)),(1920,1080),2))
         for c in A.CIELOS: jobs.append((f'{out}/{nombre}/clima_{c}_4K.png',cuadro(pildora(t,cielo=c)),(1920,1080),2))
         jobs.append((f'{out}/{nombre}/nota_4K.png',cuadro(nota(t,firma_fija=True)),(1920,1080),2))
     asyncio.run(A.generar(jobs))
+def hoja_lugares(path):
+    celdas=''.join(f'<div style="position:relative;width:300px;height:150px;overflow:hidden"><div style="position:absolute;left:-40px;top:-760px">{cartel("otono",icono_n=ic)}</div><div style="position:absolute;left:0;bottom:4px;width:300px;text-align:center;font-family:JS;font-weight:700;font-size:16px;letter-spacing:3px;color:#2A2C27">{lug.upper()}</div></div>' for lug,ic in LUGARES.items())
+    asyncio.run(A.generar([(path,f'<div style="width:1800px;height:460px;background:#C9D6C0;display:flex;flex-wrap:wrap">{celdas}</div>',(1800,460),1)]))
 if __name__=='__main__' and sys.argv[1:2]==['kit']:
     kit()
+elif __name__=='__main__' and sys.argv[1:2]==['hoja']:
+    hoja_lugares(sys.argv[2])
 elif __name__=='__main__':
     foto,out=sys.argv[1],sys.argv[2]
     temas=sys.argv[3].split(',') if len(sys.argv)>3 else list(PAL)
