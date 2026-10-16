@@ -1,8 +1,8 @@
 import asyncio, sys
 import agregados as A
 import logo as L
-# Placa "ventana de temporada": una ventana ilustrada como las del logo (220x320, esquinas redondeadas)
-# con una escena de la época, y al lado la info del día: etiqueta, fecha/estación, temperatura + cielo
+# Placa de datos por temporada (las escenas ESCENAS quedan guardadas pero no se usan en la placa):
+# info del día en el color de la época: etiqueta, fecha/estación, temperatura + cielo
 # y ubicación (más grande). Cuadro completo 4K transparente; Ivan escribe 4 textos.
 # Uso: python3 ventanas_temporada.py           → todas las escenas × estados del cielo × ES/EN
 #      python3 ventanas_temporada.py prueba FOTO DIR
@@ -74,16 +74,15 @@ TEMAS={  # etiqueta ES, EN, color de acento
  'verano':('VERANO','SUMMER','#F3C766'),'argentina':('ARGENTINA','ARGENTINA','#9CCBEA'),'patagonia':('PATAGONIA','PATAGONIA','#86CFC8')}
 # ---------- medidas (4K) ----------
 WS=1.6; WW,WH=220*WS,320*WS; WX=150; WY=2010-WH          # ventana 352x512, abajo a la izquierda
-X0=WX+WW+70                                              # columna de íconos/etiqueta (572)
-ICX=X0+55; TX=X0+128                                     # centro de íconos (627) y textos (700)
+X0=WX                                                    # sin ventana: la columna arranca en el margen (150)
+ICX=X0+55; TX=X0+128                                     # centro de íconos (205) y textos (278)
 B_ET,B_FE,B_TC,B_UB=1580,1745,1870,2000                  # líneas base: etiqueta, fecha, temp+cielo, ubicación
-CIELO_IC,CIELO_TX=1010,1085
+CIELO_IC,CIELO_TX=X0+438,X0+513
 def placa(tema,cielo,lang,textos=None,fondo='',guia=False):
     es,en,ac=TEMAS[tema]; et=es if lang=='ES' else en
     halo='filter:drop-shadow(0 0 16px rgba(20,26,38,.65)) drop-shadow(0 3px 5px rgba(0,0,0,.4))'
     b=f'<div style="position:absolute;left:{X0-120}px;top:{WY-60}px;width:1650px;height:{WH+140}px;background:radial-gradient(closest-side,rgba(20,26,38,.5),rgba(20,26,38,0));filter:blur(12px)"></div>'
-    b+=f'''<div style="position:absolute;left:{WX}px;top:{WY}px;width:{WW}px;height:{WH}px;border-radius:{22*WS}px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.35),0 0 0 4px rgba(242,238,230,.9)">
-<svg width="{WW}" height="{WH}" viewBox="0 0 220 320"><defs><filter id="satv"><feColorMatrix type="saturate" values=".75"/></filter></defs><g filter="url(#satv)">{ESCENAS[tema]}</g></svg></div>'''
+    # (la ventana ilustrada se sacó a pedido de Ivan: quedan solo los datos en el color de la temporada)
     b+=f'<div style="position:absolute;left:{X0}px;top:{B_ET-48}px;font-family:JS;font-weight:700;font-size:50px;letter-spacing:12px;color:{ac};{halo}">{et}</div>'
     lw=480; d=f'M14 0 C {lw*.21} -18, {lw*.33} 14, {lw*.5} 2 S {lw*.81} -16, {lw-12} 2'
     b+=f'<svg style="position:absolute;left:{X0}px;top:{B_ET+22}px;overflow:visible;{halo}" width="{lw+30}" height="40" viewBox="-10 -30 {lw+30} 40"><circle r="7" fill="{ac}"/><path d="{d}" fill="none" stroke="{ac}" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 10"/><path d="M{lw} 6 c-9 -12 -14 -17 -14 -24 a14 14 0 0 1 28 0 c0 7 -5 12 -14 24z" fill="none" stroke="{ac}" stroke-width="3.5" stroke-linejoin="round"/><circle cx="{lw}" cy="-18" r="5" fill="{ac}"/></svg>'
@@ -108,7 +107,7 @@ EJ={'otono':('Otoño · 15 de octubre','12°C','Parcialmente nublado','Waterstow
     'patagonia':('Verano · enero','16°C','Viento','El Chaltén · Santa Cruz','viento')}
 def prueba(foto,out):
     asyncio.run(A.generar([(f'{out}/prueba_{k}.png',placa(k,v[4],'ES',v[:4],fondo=f'background:url(file://{foto}) center/cover'),(3840,2160),1) for k,v in EJ.items()]))
-def todo(out='ventanas-temporada'):
+def todo(out='datos-temporada'):
     jobs=[(f'{out}/{k}/{lang}/placa-{k}_{c}_4K.png',placa(k,c,lang),(3840,2160),1) for k in TEMAS for lang in ('ES','EN') for c in A.CIELOS]
     jobs+=[(f'{out}/{k}/guia_4K.png',placa(k,'nublado','ES',guia=True),(3840,2160),1) for k in TEMAS]
     asyncio.run(A.generar(jobs))
