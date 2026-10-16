@@ -5,12 +5,9 @@ import agregados as A
 # toma), texto en tinta, color de la temporada en círculos, bordes y detalles. Medidas en unidades 1080p
 # (se renderiza a 2x para 4K).
 PAPEL='#F4EEE2'; TINTA='#2A2C27'
-PAL={  # principal, oscuro, suave (cinta / detalles), etiqueta ES, EN
- 'otono':dict(c='#C97B45',o='#8A4A25',s='#F0C9A0',c2='#E3B052'),
- 'halloween':dict(c='#8A6BB0',o='#4E3870',s='#F3B26B',c2='#F0954A'),
- 'invierno':dict(c='#7FA9C9',o='#4A6F8E',s='#D6E7F2',c2='#B9D3E6'),
- 'verano':dict(c='#4FA7A6',o='#2D6E6E',s='#F5D27A',c2='#F3C766'),
-}
+# Un solo color general para todo (el arena del logo); lo que cambia por época son los iconitos de arriba.
+GENERAL=dict(c='#9A7444',o='#5E4626',s='#E3CFA6',c2='#D2B587')
+PAL={t:GENERAL for t in ('otono','halloween','invierno','verano')}
 def ico(n,col,tam,sw=2.4): return A.icono(n,col,tam,sw)
 # ---------- decoraciones chicas por temporada ----------
 def hoja_arce(x,y,s,r,c):
@@ -18,23 +15,26 @@ def hoja_arce(x,y,s,r,c):
     return f'<g transform="translate({x},{y}) rotate({r}) scale({s})"><path d="{p}" fill="{c}" stroke="#7a3f1c" stroke-width="1.6" stroke-linejoin="round"/><path d="M0 24 V-18 M0 6 L10 -2 M0 6 L-10 -2" stroke="#7a3f1c" stroke-width="1.4" fill="none"/></g>'
 def hoja_oval(x,y,s,r,c): return f'<g transform="translate({x},{y}) rotate({r}) scale({s})"><path d="M0 -20 C12 -10 12 10 0 20 C-12 10 -12 -10 0 -20Z" fill="{c}" stroke="#7a3f1c" stroke-width="1.6"/><path d="M0 -16 V24" stroke="#7a3f1c" stroke-width="1.4"/></g>'
 def murcielago(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><path d="M0 0 C-4 -5 -11 -7 -20 -4 C-16 -2 -15 1 -16 4 C-12 1 -8 2 -6 5 C-4 2 -2 2 0 4 C2 2 4 2 6 5 C8 2 12 1 16 4 C15 1 16 -2 20 -4 C11 -7 4 -5 0 0Z" fill="#3b2a4e" stroke="#F3B26B" stroke-width="1.2" stroke-linejoin="round"/></g>'
-def calabaza(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><path d="M-2 -22 C-1 -29 3 -32 7 -32" stroke="#4d6b3a" stroke-width="4.5" fill="none" stroke-linecap="round"/><ellipse cx="-16" cy="0" rx="17" ry="21" fill="#e07a30" stroke="#8a4a1c" stroke-width="1.6"/><ellipse cx="16" cy="0" rx="17" ry="21" fill="#e07a30" stroke="#8a4a1c" stroke-width="1.6"/><ellipse cx="0" cy="0" rx="16" ry="23" fill="#ee8c3c" stroke="#8a4a1c" stroke-width="1.6"/><path d="M-19 -7 l7 -5 l3 8z M19 -7 l-7 -5 l-3 8z M-17 7 Q0 19 17 7 L12 9 L8 5 L4 11 L0 6 L-4 11 L-8 5 L-12 9Z" fill="#3a2414"/></g>'
+def calabaza(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><path d="M-2 -22 C-1 -29 3 -32 7 -32" stroke="#4d6b3a" stroke-width="4.5" fill="none" stroke-linecap="round"/><ellipse cx="-16" cy="0" rx="17" ry="21" fill="#e07a30" stroke="#8a4a1c" stroke-width="1.6"/><ellipse cx="16" cy="0" rx="17" ry="21" fill="#e07a30" stroke="#8a4a1c" stroke-width="1.6"/><ellipse cx="0" cy="0" rx="16" ry="23" fill="#ee8c3c" stroke="#8a4a1c" stroke-width="1.6"/><path d="M-8 -18 C-10 0 -10 10 -8 20 M8 -18 C10 0 10 10 8 20" stroke="#c96a26" stroke-width="1.6" fill="none"/></g>'
 def copo(x,y,s,c='#ffffff'): return f'<g transform="translate({x},{y}) scale({s})" stroke="{c}" stroke-width="3" stroke-linecap="round" fill="none" style="filter:drop-shadow(0 1px 2px rgba(40,70,100,.6))"><path d="M0 -20 V20 M-17.3 -10 L17.3 10 M-17.3 10 L17.3 -10"/><path d="M-5 -15 l5 5 l5 -5 M-5 15 l5 -5 l5 5"/></g>'
 def sol(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><g stroke="#E9A93A" stroke-width="4" stroke-linecap="round">'+''.join(f'<path d="M0 -26 V-36" transform="rotate({a})"/>' for a in range(0,360,45))+'</g><circle r="19" fill="#F5C85C" stroke="#C98A2A" stroke-width="2"/></g>'
 def caracola(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><path d="M-16 10 C-18 -6 -6 -18 6 -14 C16 -10 18 2 10 10 C4 15 -6 14 -16 10Z" fill="#F6D7C3" stroke="#B9806A" stroke-width="1.8"/><path d="M-12 8 L4 -12 M-6 10 L8 -8 M0 11 L12 -2" stroke="#B9806A" stroke-width="1.5"/></g>'
+def fantasma(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><path d="M-16 18 V-4 C-16 -16 -8 -24 0 -24 C8 -24 16 -16 16 -4 V18 L10 13 L5 18 L0 13 L-5 18 L-10 13Z" fill="#FBF7F0" stroke="#8a8090" stroke-width="1.6" stroke-linejoin="round"/><ellipse cx="-5.5" cy="-6" rx="2.6" ry="3.6" fill="#2a2430"/><ellipse cx="5.5" cy="-6" rx="2.6" ry="3.6" fill="#2a2430"/><ellipse cx="0" cy="3" rx="2.4" ry="3" fill="#2a2430"/></g>'
+def nube_lluvia(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><path d="M-18 6 h34 a10 10 0 0 0 0 -20 a14 14 0 0 0 -27 -3 a10.5 10.5 0 0 0 -7 23z" fill="#E8EDF1" stroke="#7d8d9b" stroke-width="1.8" stroke-linejoin="round"/><path d="M-10 12 l-3 8 M0 12 l-3 8 M10 12 l-3 8" stroke="#6FA3C8" stroke-width="3" stroke-linecap="round"/></g>'
+def mar(x,y,s): return f'<g transform="translate({x},{y}) scale({s})"><path d="M-30 0 q7.5 -9 15 0 t15 0 t15 0 t15 0 V16 H-30Z" fill="#9FD3DC" stroke="#2f7684" stroke-width="1.6" stroke-linejoin="round"/><path d="M-30 8 q7.5 -9 15 0 t15 0 t15 0 t15 0 V18 H-30Z" fill="#4FA3B3" stroke="#2f7684" stroke-width="1.6" stroke-linejoin="round"/><circle cx="-15" cy="-6" r="1.8" fill="#fff"/><circle cx="15" cy="-6" r="1.8" fill="#fff"/></g>'
 DECO={  # (junto a la punta del cartel, junto al círculo de clima, esquina de la nota)
  'otono':(lambda x,y:hoja_oval(x-38,y-6,.9,-30,'#C8682E')+hoja_arce(x,y,1.0,15,'#E3A040'),
           lambda x,y:hoja_arce(x,y,.75,-20,'#D98A3A'),
           lambda x,y:hoja_oval(x-36,y+2,.8,-35,'#B5532A')+hoja_arce(x,y,.95,20,'#E3B052')),
- 'halloween':(lambda x,y:calabaza(x,y+4,.9)+murcielago(x-52,y-20,.8),
+ 'halloween':(lambda x,y:calabaza(x,y+4,.9)+murcielago(x-54,y-22,.85)+murcielago(x-92,y-4,.6),
           lambda x,y:murcielago(x,y,.75),
-          lambda x,y:murcielago(x-40,y-6,.7)+calabaza(x,y+6,.75)),
- 'invierno':(lambda x,y:copo(x,y,1.0)+copo(x-38,y-14,.6),
+          lambda x,y:fantasma(x-46,y-4,.9)+calabaza(x,y+6,.75)),
+ 'invierno':(lambda x,y:nube_lluvia(x-44,y-6,.85)+copo(x,y,1.0),
           lambda x,y:copo(x,y,.7),
-          lambda x,y:copo(x,y,.95)+copo(x-34,y+10,.55)),
- 'verano':(lambda x,y:sol(x,y,.9),
+          lambda x,y:copo(x,y,.95)+nube_lluvia(x-46,y+4,.7)),
+ 'verano':(lambda x,y:mar(x-50,y+2,.9)+caracola(x,y,.9),
           lambda x,y:caracola(x,y,.8),
-          lambda x,y:sol(x,y,.8)+caracola(x-46,y+14,.6)),
+          lambda x,y:caracola(x,y,.85)+mar(x-50,y+8,.8)),
 }
 RUIDO='<filter id="papel"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .3  0 0 0 0 .25  0 0 0 .07 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>'
 SOMBRA='filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))'
