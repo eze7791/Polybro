@@ -129,3 +129,16 @@ Textos (secuencia 4K; en 1080p poné el PNG a escala 50 % y usá la mitad de cad
 
 Sombra para estos textos (más suave porque ya van sobre la tarjeta): negro, opacidad 45 %, distancia 2, desenfoque 16.
 Calendario sugerido: otoño sep–oct · halloween última semana de octubre · navidad diciembre · invierno enero–febrero · san patricio marzo (o solo el 17) · primavera marzo–mayo · verano junio–agosto.
+
+## Ventanas de temporada (la placa con más personalidad)
+
+Una ventana ilustrada como las del logo con la escena de la época, y al lado la info del día. Archivos en `ventanas-temporada/<escena>/<ES|EN>/placa-<escena>_<cielo>_4K.png`. Escenas: `otono` (parque con árboles naranjas), `halloween` (luna llena, murciélagos, torre redonda irlandesa, calabaza), `navidad` (casa georgiana con corona y árbol con luces), `invierno` (nieve y lago helado), `sanpatricio` (arcoíris, colinas, tréboles y olla de oro), `primavera` (cerezo en flor y corderos), `verano` (mar, acantilado y faro), `argentina` (Obelisco), `patagonia` (Fitz Roy). Ejemplos en `ventanas-temporada/ejemplos/`.
+
+Textos (secuencia 4K; en 1080p, PNG a escala 50 % y la mitad de cada número), crema `F2EEE6`, alineados a la izquierda, sombra de siempre:
+
+| Texto | Fuente | Tamaño | X | Línea base Y |
+|---|---|---|---|---|
+| Fecha / estación | Cormorant Garamond Bold | 92 | 700 | 1745 |
+| Temperatura | Josefin Sans Bold | 84 | 700 | 1870 |
+| Cielo | Cormorant Garamond Bold | 92 | 1085 | 1870 |
+| Ubicación | Cormorant Garamond Bold | 124 | 700 | 2000 |
