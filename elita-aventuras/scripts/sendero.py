@@ -86,8 +86,11 @@ ICONO1={  # cartel, píldora, nota
 RUIDO='<filter id="papel"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .3  0 0 0 0 .25  0 0 0 .07 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>'
 SOMBRA='filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))'
 # ---------- piezas ----------
+ETIQUETA={'otono':('OTOÑO','AUTUMN'),'halloween':('HALLOWEEN','HALLOWEEN'),'invierno':('INVIERNO','WINTER'),'invierno_a':('INVIERNO','WINTER'),
+ 'invierno_b':('INVIERNO','WINTER'),'verano':('VERANO','SUMMER'),'verano_a':('VERANO','SUMMER'),'verano_b':('VERANO','SUMMER'),
+ 'primavera':('PRIMAVERA','SPRING'),'navidad':('NAVIDAD','CHRISTMAS'),'sanpatricio':('SAN PATRICIO',"ST. PATRICK'S")}
 CART=dict(cx=110,cy=830,r=58,x0=150,x1=720,alto=96)   # cartel de lugar (abajo a la izquierda)
-def cartel(tema,nombre='',sub='',icono_n='pino'):
+def cartel(tema,nombre='',sub='',icono_n='pino',lang='ES'):
     p=PAL[tema]; c=CART; y0=c['cy']-c['alto']/2; y1=c['cy']+c['alto']/2; tip=c['x1']+44
     cuerpo=f'M{c["x0"]} {y0} H{c["x1"]} L{tip} {c["cy"]} L{c["x1"]} {y1} H{c["x0"]}Z'
     s=f'<svg style="position:absolute;left:0;top:0;overflow:visible;{SOMBRA}" width="1920" height="1080"><defs>{RUIDO}</defs>'
@@ -95,6 +98,9 @@ def cartel(tema,nombre='',sub='',icono_n='pino'):
     s+=f'<path d="M{c["x0"]+8} {y0+9} H{c["x1"]-4} L{tip-14} {c["cy"]} L{c["x1"]-4} {y1-9} H{c["x0"]+8}" fill="none" stroke="{p["o"]}" stroke-opacity=".35" stroke-width="1.6" stroke-dasharray="6 6"/>'
     s+=f'<circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]}" fill="{p["c"]}" stroke="{p["o"]}" stroke-width="4"/><circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]-9}" fill="none" stroke="{PAPEL}" stroke-opacity=".8" stroke-width="2" stroke-dasharray="5 5"/>'
     s+=ICONO1[tema][0](c['x1']-34,c['cy'],60)+'</svg>'
+    # pestaña con el nombre de la temporada, apoyada sobre el borde de arriba del cartel
+    et=ETIQUETA[tema][0 if lang=='ES' else 1]
+    s=f'<div style="position:absolute;left:{c["x0"]+30}px;top:{y0-38}px;height:38px;padding:0 20px;box-sizing:border-box;background:{PAPEL};border:4px solid {p["o"]};border-bottom:none;border-radius:12px 12px 0 0;font-family:JS;font-weight:700;font-size:20px;letter-spacing:5px;line-height:36px;color:{p["o"]};{SOMBRA}">{et}</div>'+s
     s+=f'<div style="position:absolute;left:{c["cx"]-30}px;top:{c["cy"]-30}px">{ico(icono_n,PAPEL,60,2.6)}</div>'
     if nombre:
         s+=f'<div style="position:absolute;left:{c["x0"]+40}px;top:{y0+14}px;font-family:JS;font-weight:700;font-size:38px;letter-spacing:3px;color:{TINTA}">{nombre}</div>'
@@ -130,7 +136,7 @@ EJ={'ES':dict(nombre='PHOENIX PARK',sub='parque · ciervos',clima='11°C · vent
 def escena(tema,lang,textos=True,fondo=''):
     e=EJ[lang] if textos else dict(nombre='',sub='',clima='',l1='',l2='')
     cielo={'otono':'viento','halloween':'niebla','navidad':'nieve','sanpatricio':'nublado','primavera':'parcial'}.get(tema,'nieve' if tema.startswith('invierno') else 'despejado')
-    b=cartel(tema,e['nombre'],e['sub'])+pildora(tema,e['clima'],cielo)+nota(tema,e['l1'],e['l2'])
+    b=cartel(tema,e['nombre'],e['sub'],lang=lang)+pildora(tema,e['clima'],cielo)+nota(tema,e['l1'],e['l2'])
     return f'<div style="position:relative;width:1920px;height:1080px;{fondo}">{b}</div>'
 if __name__=='__main__':
     foto,out=sys.argv[1],sys.argv[2]
