@@ -59,6 +59,30 @@ DECO={  # (junto a la punta del cartel, junto al círculo de clima, esquina de l
  'navidad':(lambda x,y:acebo(x-34,y,1.1)+bola(x+6,y+2,.85), lambda x,y:acebo(x,y,.8), lambda x,y:bola(x,y+4,.8)+acebo(x-44,y,.95)),
  'sanpatricio':(lambda x,y:trebol(x-40,y,.9,-15)+galera(x+4,y-2,.85), lambda x,y:trebol(x,y,.7,10), lambda x,y:galera(x,y,.8)+trebol(x-44,y+4,.8,-20)+moneda(x-80,y+12,.7)),
 }
+# Un solo iconito por pieza, dentro del papel beige (a la derecha, centrado en alto).
+# tamaño natural aproximado de cada dibujo (lado mayor a escala 1) para llevarlos todos al mismo tamaño
+TAM={hoja_arce:50,hoja_oval:40,calabaza:68,murcielago:42,fantasma:44,muneco:52,copo2:44,gorro:48,taza:42,sombrilla:58,sol:74,helado:56,tulipan:48,mariposa:52,acebo:50,bola:42,trebol:46,galera:50}
+def _ic(fn,*extra):
+    def f(x,y,obj):
+        sc=obj/TAM[fn]
+        if fn in (hoja_arce,hoja_oval): return fn(x,y,sc,extra[0],extra[1])
+        if fn is trebol: return fn(x,y-6*sc,sc,extra[0] if extra else 0)
+        if fn is tulipan: return fn(x,y-3*sc,sc)
+        if fn is acebo: return fn(x+2*sc,y-4*sc,sc)
+        if fn is muneco: return fn(x,y-1*sc,sc)
+        return fn(x,y,sc)
+    return f
+ICONO1={  # cartel, píldora, nota
+ 'otono':(_ic(hoja_arce,15,'#E3A040'),_ic(hoja_oval,-30,'#C8682E'),_ic(hoja_arce,-10,'#D98A3A')),
+ 'halloween':(_ic(calabaza),_ic(murcielago),_ic(fantasma)),
+ 'invierno_a':(_ic(muneco),_ic(copo2),_ic(copo2)),
+ 'invierno_b':(_ic(gorro),_ic(copo2),_ic(taza)),
+ 'verano_a':(_ic(sombrilla),_ic(sol),_ic(sol)),
+ 'verano_b':(_ic(helado),_ic(sol),_ic(helado)),
+ 'primavera':(_ic(tulipan),_ic(mariposa),_ic(mariposa)),
+ 'navidad':(_ic(acebo),_ic(bola),_ic(bola)),
+ 'sanpatricio':(_ic(trebol,-10),_ic(trebol,10),_ic(galera)),
+}
 RUIDO='<filter id="papel"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .3  0 0 0 0 .25  0 0 0 .07 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>'
 SOMBRA='filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))'
 # ---------- piezas ----------
@@ -70,19 +94,19 @@ def cartel(tema,nombre='',sub='',icono_n='pino'):
     s+=f'<path d="{cuerpo}" fill="{PAPEL}" stroke="{p["o"]}" stroke-width="4" stroke-linejoin="round"/><path d="{cuerpo}" fill="{PAPEL}" filter="url(#papel)"/>'
     s+=f'<path d="M{c["x0"]+8} {y0+9} H{c["x1"]-4} L{tip-14} {c["cy"]} L{c["x1"]-4} {y1-9} H{c["x0"]+8}" fill="none" stroke="{p["o"]}" stroke-opacity=".35" stroke-width="1.6" stroke-dasharray="6 6"/>'
     s+=f'<circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]}" fill="{p["c"]}" stroke="{p["o"]}" stroke-width="4"/><circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]-9}" fill="none" stroke="{PAPEL}" stroke-opacity=".8" stroke-width="2" stroke-dasharray="5 5"/>'
-    s+=DECO[tema][0](c['x1']-10,y0-6)+'</svg>'
+    s+=ICONO1[tema][0](c['x1']-34,c['cy'],60)+'</svg>'
     s+=f'<div style="position:absolute;left:{c["cx"]-30}px;top:{c["cy"]-30}px">{ico(icono_n,PAPEL,60,2.6)}</div>'
     if nombre:
         s+=f'<div style="position:absolute;left:{c["x0"]+40}px;top:{y0+14}px;font-family:JS;font-weight:700;font-size:38px;letter-spacing:3px;color:{TINTA}">{nombre}</div>'
         s+=f'<div style="position:absolute;left:{c["x0"]+42}px;top:{y0+54}px;font-family:CG;font-style:italic;font-weight:700;font-size:30px;color:{p["o"]}">{sub}</div>'
     return s
-PILL=dict(cx=110,cy=962,r=44,x0=140,x1=470,alto=66)
+PILL=dict(cx=110,cy=962,r=44,x0=140,x1=540,alto=66)
 def pildora(tema,texto='',cielo='viento'):
     p=PAL[tema]; c=PILL; y0=c['cy']-c['alto']/2
     s=f'<svg style="position:absolute;left:0;top:0;overflow:visible;{SOMBRA}" width="1920" height="1080"><defs>{RUIDO}</defs>'
     s+=f'<rect x="{c["x0"]-30}" y="{y0}" width="{c["x1"]-c["x0"]+30}" height="{c["alto"]}" rx="{c["alto"]/2}" fill="{PAPEL}" stroke="{p["o"]}" stroke-width="4"/><rect x="{c["x0"]-30}" y="{y0}" width="{c["x1"]-c["x0"]+30}" height="{c["alto"]}" rx="{c["alto"]/2}" fill="{PAPEL}" filter="url(#papel)"/>'
     s+=f'<circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]}" fill="{p["c"]}" stroke="{p["o"]}" stroke-width="4"/><circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]-8}" fill="none" stroke="{PAPEL}" stroke-opacity=".8" stroke-width="2" stroke-dasharray="5 5"/>'
-    s+=DECO[tema][1](c['x1']-14,y0-4)+'</svg>'
+    s+=ICONO1[tema][1](c['x1']-28,c['cy'],42)+'</svg>'
     s+=f'<div style="position:absolute;left:{c["cx"]-24}px;top:{c["cy"]-24}px">{ico(A.CIELOS[cielo],PAPEL,48,2.8)}</div>'
     if texto: s+=f'<div style="position:absolute;left:{c["x0"]+34}px;top:{y0+15}px;font-family:JS;font-weight:700;font-size:32px;letter-spacing:1px;color:{TINTA}">{texto}</div>'
     return s
@@ -96,7 +120,7 @@ def nota(tema,l1='',l2='',firma=True):
 <g transform="translate(46,{n["h"]-34})"><circle r="4" fill="{p["o"]}"/><path d="{d}" fill="none" stroke="{p["o"]}" stroke-opacity=".6" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="6 6"/><path d="M{lw} 4 c-5 -7 -8 -10 -8 -14 a8 8 0 0 1 16 0 c0 4 -3 7 -8 14z" fill="none" stroke="{p["o"]}" stroke-width="2"/></g>
 <rect x="24" y="-16" width="132" height="36" fill="{p["s"]}" opacity=".85" transform="rotate(-3 90 2)"/>
 <rect x="{n["w"]-150}" y="{n["h"]-22}" width="132" height="36" fill="{p["c2"]}" opacity=".7" transform="rotate(4 {n["w"]-84} {n["h"]-4})"/>
-{DECO[tema][2](n["w"]-34,-8)}</svg>'''
+{ICONO1[tema][2](n["w"]-58,58,62)}</svg>'''
     if l1:
         s+=f'<div style="position:absolute;left:46px;top:38px;font-family:CG;font-style:italic;font-weight:700;font-size:42px;line-height:1.18;color:{TINTA}">{l1}<br>{l2}</div>'
         if firma: s+=f'<div style="position:absolute;right:48px;top:{n["h"]-86}px;font-family:JS;font-weight:700;font-size:20px;letter-spacing:4px;color:{p["o"]}">— ELITA</div>'
