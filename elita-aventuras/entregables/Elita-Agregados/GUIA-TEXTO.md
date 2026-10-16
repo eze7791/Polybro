@@ -142,3 +142,25 @@ Textos (secuencia 4K; en 1080p, PNG a escala 50 % y la mitad de cada número), c
 | Temperatura | Josefin Sans Bold | 84 | 278 | 1870 |
 | Cielo | Cormorant Garamond Bold | 92 | 663 | 1870 |
 | Ubicación | Cormorant Garamond Bold | 124 | 278 | 2000 |
+
+## Kit sendero (cartel de lugar, píldora de clima y nota de Elita)
+
+Un solo color general (arena) y un iconito de la temporada en cada pieza. Archivos en `sendero-kit/<temporada>/`:
+- `ES/` y `EN/`: `cartel-corto_4K.png` y `cartel-largo_4K.png` (con la pestaña OTOÑO / AUTUMN, etc.).
+- `clima_<cielo>_4K.png`: píldora con el ícono del cielo (despejado, parcial, nublado, lluvia, niebla, viento, nieve, noche-despejada).
+- `nota_4K.png`: papel con cintas, camino punteado y firma "— ELITA" ya puesta.
+
+Temporadas: otono, halloween, invierno-muneco, invierno-gorro, primavera, verano-mar, verano-sombrilla, navidad, sanpatricio.
+Todos los PNG son cuadro completo 3840×2160: escala 100 %, sin mover. En 1080p, escala 50 % y la mitad de cada número.
+
+Textos (secuencia 4K), alineados a la izquierda, punto de anclaje 0 · 0, **sin sombra** (van sobre papel):
+
+| Texto | Fuente | Tamaño | Seguimiento | Color | Posición X · Y (línea base) | Rotación |
+|---|---|---|---|---|---|---|
+| Nombre del lugar (MAYÚSCULAS) | Josefin Sans Bold | 76 | 80 | `2A2C27` | 380 · 1649 | 0 |
+| Tipo de lugar ("parque · ciervos") | Cormorant Garamond Bold Italic | 60 | 0 | `5E4626` | 384 · 1727 | 0 |
+| Clima ("11°C · ventoso") | Josefin Sans Bold | 64 | 30 | `2A2C27` | 348 · 1936 | 0 |
+| Nota, línea 1 | Cormorant Garamond Bold Italic | 84 | 0 | `2A2C27` | 2449 · 1568 | −1,6° |
+| Nota, línea 2 | Cormorant Garamond Bold Italic | 84 | 0 | `2A2C27` | 2452 · 1667 | −1,6° |
+
+Largos aproximados: cartel corto hasta ~14 letras en mayúsculas ("PHOENIX PARK"), largo hasta ~24 ("ST STEPHEN'S GREEN"); clima hasta ~22 caracteres; cada línea de la nota hasta ~34.

@@ -91,8 +91,8 @@ ETIQUETA={'otono':('OTOÑO','AUTUMN'),'halloween':('HALLOWEEN','HALLOWEEN'),'inv
  'invierno_b':('INVIERNO','WINTER'),'verano':('VERANO','SUMMER'),'verano_a':('VERANO','SUMMER'),'verano_b':('VERANO','SUMMER'),'verano_mar':('VERANO','SUMMER'),
  'primavera':('PRIMAVERA','SPRING'),'navidad':('NAVIDAD','CHRISTMAS'),'sanpatricio':('SAN PATRICIO',"ST. PATRICK'S")}
 CART=dict(cx=110,cy=830,r=58,x0=150,x1=720,alto=96)   # cartel de lugar (abajo a la izquierda)
-def cartel(tema,nombre='',sub='',icono_n='pino',lang='ES'):
-    p=PAL[tema]; c=CART; y0=c['cy']-c['alto']/2; y1=c['cy']+c['alto']/2; tip=c['x1']+44
+def cartel(tema,nombre='',sub='',icono_n='pino',lang='ES',x1=None):
+    p=PAL[tema]; c=dict(CART,x1=x1 or CART['x1']); y0=c['cy']-c['alto']/2; y1=c['cy']+c['alto']/2; tip=c['x1']+44
     cuerpo=f'M{c["x0"]} {y0} H{c["x1"]} L{tip} {c["cy"]} L{c["x1"]} {y1} H{c["x0"]}Z'
     s=f'<svg style="position:absolute;left:0;top:0;overflow:visible;{SOMBRA}" width="1920" height="1080"><defs>{RUIDO}</defs>'
     s+=f'<path d="{cuerpo}" fill="{PAPEL}" stroke="{p["o"]}" stroke-width="4" stroke-linejoin="round"/><path d="{cuerpo}" fill="{PAPEL}" filter="url(#papel)"/>'
@@ -118,7 +118,7 @@ def pildora(tema,texto='',cielo='viento'):
     if texto: s+=f'<div style="position:absolute;left:{c["x0"]+34}px;top:{y0+15}px;font-family:JS;font-weight:700;font-size:32px;letter-spacing:1px;color:{TINTA}">{texto}</div>'
     return s
 NOTA=dict(x=1180,y=700,w=660,h=250,rot=-1.6)
-def nota(tema,l1='',l2='',firma=True):
+def nota(tema,l1='',l2='',firma=True,firma_fija=False):
     p=PAL[tema]; n=NOTA
     lw=520; d=f'M14 0 C {lw*.21} -10, {lw*.33} 8, {lw*.5} 1 S {lw*.81} -9, {lw-12} 1'
     s=f'''<div style="position:absolute;left:{n["x"]}px;top:{n["y"]}px;width:{n["w"]}px;height:{n["h"]}px;transform:rotate({n["rot"]}deg);{SOMBRA}">
@@ -130,7 +130,7 @@ def nota(tema,l1='',l2='',firma=True):
 {ICONO1[tema][2](n["w"]-58,58,62)}</svg>'''
     if l1:
         s+=f'<div style="position:absolute;left:46px;top:38px;font-family:CG;font-style:italic;font-weight:700;font-size:42px;line-height:1.18;color:{TINTA}">{l1}<br>{l2}</div>'
-        if firma: s+=f'<div style="position:absolute;right:48px;top:{n["h"]-86}px;font-family:JS;font-weight:700;font-size:20px;letter-spacing:4px;color:{p["o"]}">— ELITA</div>'
+    if firma and (l1 or firma_fija): s+=f'<div style="position:absolute;right:48px;top:{n["h"]-86}px;font-family:JS;font-weight:700;font-size:20px;letter-spacing:4px;color:{p["o"]}">— ELITA</div>'
     return s+'</div>'
 EJ={'ES':dict(nombre='PHOENIX PARK',sub='parque · ciervos',clima='11°C · ventoso',l1='Subí el volumen:',l2='se escucha la ciudad despertando.'),
     'EN':dict(nombre='PHOENIX PARK',sub='park · deer',clima='11°C · windy',l1='Turn the volume up:',l2='you can hear the city waking up.')}
@@ -139,7 +139,23 @@ def escena(tema,lang,textos=True,fondo=''):
     cielo={'otono':'viento','halloween':'niebla','navidad':'nieve','sanpatricio':'nublado','primavera':'parcial'}.get(tema,'nieve' if tema.startswith('invierno') else 'despejado')
     b=cartel(tema,e['nombre'],e['sub'],lang=lang)+pildora(tema,e['clima'],cielo)+nota(tema,e['l1'],e['l2'])
     return f'<div style="position:relative;width:1920px;height:1080px;{fondo}">{b}</div>'
-if __name__=='__main__':
+# ---------- kit final: piezas sueltas, cuadro completo 4K transparente, sin texto ----------
+KIT={'otono':'otono','halloween':'halloween','invierno-muneco':'invierno_a','invierno-gorro':'invierno_b','primavera':'primavera',
+     'verano-mar':'verano_mar','verano-sombrilla':'verano_a','navidad':'navidad','sanpatricio':'sanpatricio'}
+CARTEL_LARGO=980
+def cuadro(b): return f'<div style="position:relative;width:1920px;height:1080px">{b}</div>'
+def kit(out='sendero-kit'):
+    jobs=[]
+    for nombre,t in KIT.items():
+        for l in ('ES','EN'):
+            jobs.append((f'{out}/{nombre}/{l}/cartel-corto_4K.png',cuadro(cartel(t,lang=l)),(1920,1080),2))
+            jobs.append((f'{out}/{nombre}/{l}/cartel-largo_4K.png',cuadro(cartel(t,lang=l,x1=CARTEL_LARGO)),(1920,1080),2))
+        for c in A.CIELOS: jobs.append((f'{out}/{nombre}/clima_{c}_4K.png',cuadro(pildora(t,cielo=c)),(1920,1080),2))
+        jobs.append((f'{out}/{nombre}/nota_4K.png',cuadro(nota(t,firma_fija=True)),(1920,1080),2))
+    asyncio.run(A.generar(jobs))
+if __name__=='__main__' and sys.argv[1:2]==['kit']:
+    kit()
+elif __name__=='__main__':
     foto,out=sys.argv[1],sys.argv[2]
     temas=sys.argv[3].split(',') if len(sys.argv)>3 else list(PAL)
     jobs=[(f'{out}/prueba_{t}_{l}.png',escena(t,l,fondo=f'background:url(file://{foto}) center/cover'),(1920,1080),2) for t in temas for l in ('ES','EN')]
