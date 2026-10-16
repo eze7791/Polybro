@@ -53,33 +53,35 @@ OPENING_DUR=6.0
 # Cuadros (en 1080p): 2 videos 16:9 de 680x383 a la derecha; círculo de suscripción a la izquierda.
 VIDEOS=[(1140,150,680,383),(1140,620,680,383)]
 SUBS=(470,800,92)
-def pantalla_final(ink,sand,lang,guias=False):
+def pantalla_final(ink,sand,lang,guias=False,videos=True):
     subs=TXT[lang][1]; rot=TXT[lang][2]
     b=f'<g id="hl">{Y.hills(1920,1080).replace(Y.SAND,sand)}</g>'
-    b+=f'<g id="e1"><text x="470" y="430" text-anchor="middle" font-family="CG" font-weight="600" font-size="150" fill="{ink}">Elita</text>'
+    # sin videos: el nombre y el botón de suscripción se centran
+    dx=0 if videos else 490
+    b+=f'<g id="e1"><g transform="translate({dx},0)"><text x="470" y="430" text-anchor="middle" font-family="CG" font-weight="600" font-size="150" fill="{ink}">Elita</text>'
     b+=Y.trail(470-200,492,400,'punteado',col=sand)
-    b+=f'<text x="478" y="572" text-anchor="middle" font-family="JS" font-weight="600" font-size="38" letter-spacing="15" fill="{ink}">ADVENTURES</text></g>'
+    b+=f'<text x="478" y="572" text-anchor="middle" font-family="JS" font-weight="600" font-size="38" letter-spacing="15" fill="{ink}">ADVENTURES</text></g></g>'
     cx,cy,r=SUBS
-    b+=f'<g id="e2"><circle cx="{cx}" cy="{cy}" r="{r+10}" fill="none" stroke="{sand}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 8"/>'
-    b+=f'<text x="{cx+4}" y="{cy+r+62}" text-anchor="middle" font-family="JS" font-weight="600" font-size="22" letter-spacing="8" fill="{sand}">{subs}</text></g>'
+    b+=f'<g id="e2"><g transform="translate({dx},{0 if videos else -40})"><circle cx="{cx}" cy="{cy}" r="{r+10}" fill="none" stroke="{sand}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 8"/>'
+    b+=f'<text x="{cx+4}" y="{cy+r+62}" text-anchor="middle" font-family="JS" font-weight="600" font-size="22" letter-spacing="8" fill="{sand}">{subs}</text></g></g>'
     # cuadros de video: marco punteado 10 px por fuera del hueco (YouTube pone la miniatura adentro) y etiqueta arriba
     b+='<g id="e3">'
-    for (x,y,w,h),lab in zip(VIDEOS,rot):
+    for (x,y,w,h),lab in (zip(VIDEOS,rot) if videos else []):
         b+=f'<rect x="{x-10}" y="{y-10}" width="{w+20}" height="{h+20}" rx="22" fill="{ink}" fill-opacity=".05" stroke="{sand}" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 8"/>'
         b+=f'<text x="{x-6}" y="{y-28}" font-family="JS" font-weight="600" font-size="22" letter-spacing="8" fill="{sand}">{lab}</text>'
     b+='</g>'
     if guias:
-        for x,y,w,h in VIDEOS:
+        for x,y,w,h in (VIDEOS if videos else []):
             b+=f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{ink}" fill-opacity=".08"/><text x="{x+w/2}" y="{y+h/2+10}" text-anchor="middle" font-family="JS" font-weight="600" font-size="26" letter-spacing="8" fill="{ink}" fill-opacity=".45">VIDEO</text>'
-        b+=f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{ink}" fill-opacity=".08"/>'
+        b+=f'<circle cx="{cx+dx}" cy="{cy+(0 if videos else -40)}" r="{r}" fill="{ink}" fill-opacity=".08"/>'
     return b
-def closing(bg,ink,sand,lang):
+def closing(bg,ink,sand,lang,videos=True):
     lines=TXT[lang][0]
     fw=f'<g id="fw" opacity="0">'+''.join(f'<text x="960" y="{480+k*112}" text-anchor="middle" font-family="CG" font-style="italic" font-weight="600" font-size="100" fill="{ink}">{t}</text>' for k,t in enumerate(lines))
     fw+=f'<text x="960" y="{480+len(lines)*112+20}" text-anchor="middle" font-family="CG" font-style="italic" font-weight="500" font-size="56" fill="{sand}">— Elita</text></g>'
-    return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">{defs()}<rect width="1920" height="1080" fill="{bg}"/>{fw}{pantalla_final(ink,sand,lang)}</svg>'
-def final_guias(bg,ink,sand,lang):
-    return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">{defs()}<rect width="1920" height="1080" fill="{bg}"/>{pantalla_final(ink,sand,lang,guias=True)}</svg>'
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">{defs()}<rect width="1920" height="1080" fill="{bg}"/>{fw}{pantalla_final(ink,sand,lang,videos=videos)}</svg>'
+def final_guias(bg,ink,sand,lang,videos=True):
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">{defs()}<rect width="1920" height="1080" fill="{bg}"/>{pantalla_final(ink,sand,lang,guias=True,videos=videos)}</svg>'
 JS_CLOSING='''
 const E=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3), seg=(t,a,b)=>(t-a)/(b-a), $=id=>document.getElementById(id);
 const fade=(id,p,dy=16)=>{const g=$(id); g.setAttribute('opacity',p); g.style.transform=`translateY(${(1-p)*dy}px)`;};
@@ -113,13 +115,14 @@ async def main(res,fps,que):
                 await load(opening(**c),JS_OPENING)
                 mp4(await frames(OPENING_DUR),f'{out}/opening_{tema}.mp4')
                 await pg.evaluate(f'setT({OPENING_DUR})'); await pg.screenshot(path=f'{out}/opening_{tema}_ultimo-cuadro.png')
-            if que in ('closing','todo'):
+            if que in ('closing','closing-sin-videos','todo'):
+                vids=que!='closing-sin-videos'; suf='' if vids else '_sin-videos'
                 for lang in TXT:
-                    await load(closing(**c,lang=lang),JS_CLOSING)
-                    mp4(await frames(CLOSING_ANIM),f'{out}/closing_{lang}_{tema}.mp4',hold=FINAL_INICIO+FINAL_DUR-CLOSING_ANIM)
-                    await pg.evaluate(f'setT({CLOSING_ANIM})'); await pg.screenshot(path=f'{out}/pantalla-final_{lang}_{tema}.png')
-                    await load(final_guias(**c,lang=lang),'window.setT=()=>{}')
-                    await pg.screenshot(path=f'{out}/pantalla-final_{lang}_{tema}_guias.png')
+                    await load(closing(**c,lang=lang,videos=vids),JS_CLOSING)
+                    mp4(await frames(CLOSING_ANIM),f'{out}/closing{suf}_{lang}_{tema}.mp4',hold=FINAL_INICIO+FINAL_DUR-CLOSING_ANIM)
+                    await pg.evaluate(f'setT({CLOSING_ANIM})'); await pg.screenshot(path=f'{out}/pantalla-final{suf}_{lang}_{tema}.png')
+                    await load(final_guias(**c,lang=lang,videos=vids),'window.setT=()=>{}')
+                    await pg.screenshot(path=f'{out}/pantalla-final{suf}_{lang}_{tema}_guias.png')
         await b.close()
     shutil.rmtree('_frames',ignore_errors=True); os.remove('_v.html')
 if __name__=="__main__": a=sys.argv[1:]; asyncio.run(main(a[0] if a else '4K',int(a[1]) if len(a)>1 else 60,a[2] if len(a)>2 else 'todo'))
