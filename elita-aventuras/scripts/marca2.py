@@ -14,7 +14,7 @@ def texto(col,col2):
 <div style="margin:3px 0 2px">{camino(col2)}</div>
 <div style="font-family:JS;font-weight:700;font-size:13px;letter-spacing:5.5px;margin-left:5.5px">ADVENTURES</div></div>'''
 def marca(estilo):
-    if estilo=='crema-linea':  # "Elita ADVENTURES" en una línea, sin camino (la elegida)
+    if estilo in ('crema-linea','crema-linea-nota'):  # "Elita ADVENTURES" en una línea, sin camino (la elegida)
         b=f'<div style="{HALO};display:flex;align-items:baseline;color:#F2EEE6"><span style="font-family:CG;font-weight:700;font-size:24px">Elita</span><span style="font-family:JS;font-weight:700;font-size:10px;letter-spacing:3.5px;margin-left:7px">ADVENTURES</span></div>'
     elif estilo=='crema': b=f'<div style="{HALO}">{texto("#F2EEE6","#F2EEE6")}</div>'
     elif estilo=='blanco': b=f'<div style="{HALO}">{texto("#FFFFFF","#FFFFFF")}</div>'
@@ -24,9 +24,11 @@ def marca(estilo):
 <div style="width:34px;height:34px;border-radius:50%;background:{p["c"]};border:2px solid {p["o"]};display:flex;align-items:center;justify-content:center;margin-right:10px">{A.icono("ubicacion",S.PAPEL,22,2.8)}</div>
 <div style="font-family:CG;font-weight:700;font-size:24px;color:#2A2C27;margin-right:8px">Elita</div>
 <div style="font-family:JS;font-weight:700;font-size:13px;letter-spacing:4px;color:{p["o"]};padding-top:3px">ADVENTURES</div></div>'''
-    pos='right:44px;bottom:34px' if estilo=='crema-linea' else 'right:56px;bottom:44px'
+    # 'crema-linea-nota': misma marca, con el borde derecho alineado al borde derecho de la nota del kit sendero
+    # (esquina inferior derecha del papel rotado ≈ x 1843, y 941 en 1080p) y justo debajo de ella
+    pos={'crema-linea':'right:44px;bottom:34px','crema-linea-nota':'right:77px;bottom:78px'}.get(estilo,'right:56px;bottom:44px')
     return f'<div style="position:relative;width:1920px;height:1080px"><div style="position:absolute;{pos};opacity:.88">{b}</div></div>'
-ESTILOS=('crema-linea','crema','blanco','papel')
+ESTILOS=('crema-linea','crema-linea-nota','crema','blanco','papel')
 if __name__=='__main__':
     if sys.argv[1:2]==['prueba']:
         fotos=sys.argv[2].split(','); out=sys.argv[3]; jobs=[]
