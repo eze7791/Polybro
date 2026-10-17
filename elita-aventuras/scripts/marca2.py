@@ -26,7 +26,7 @@ def marca(estilo):
 <div style="font-family:JS;font-weight:700;font-size:13px;letter-spacing:4px;color:{p["o"]};padding-top:3px">ADVENTURES</div></div>'''
     # 'crema-linea-nota': misma marca, con el borde derecho alineado al borde derecho de la nota del kit sendero
     # (esquina inferior derecha del papel rotado ≈ x 1843, y 941 en 1080p) y justo debajo de ella
-    pos={'crema-linea':'right:44px;bottom:34px','crema-linea-nota':'right:77px;bottom:78px'}.get(estilo,'right:56px;bottom:44px')
+    pos={'crema-linea':'right:44px;bottom:34px','crema-linea-nota':'right:77px;bottom:34px'}.get(estilo,'right:56px;bottom:44px')
     return f'<div style="position:relative;width:1920px;height:1080px"><div style="position:absolute;{pos};opacity:.88">{b}</div></div>'
 ESTILOS=('crema-linea','crema-linea-nota','crema','blanco','papel')
 if __name__=='__main__':
