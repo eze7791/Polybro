@@ -8,7 +8,7 @@ FPS=60
 W,H,G=Y.W,Y.H,Y.G
 TEMAS={'crema':dict(bg='#F2EEE6',ink='#2A2C27',sand='#8C6A3C'),
        'noche':dict(bg='#1A2236',ink='#EEE7DA',sand='#C9A978')}
-TXT={'EN':(['Thanks for walking','with me.'],'SUBSCRIBE',('PREVIOUS','NEXT')),'ES':(['Gracias por caminar','conmigo.'],'SUSCRIBITE',('ANTERIOR','SIGUIENTE'))}
+TXT={'EN':(['Thanks for walking','with me.'],'SUBSCRIBE',('PREVIOUS','NEXT')),'ES':(['Gracias por caminar','conmigo.'],'SUSCRÍBETE',('ANTERIOR','SIGUIENTE'))}
 LW=520
 TRAIL_D=f'M14 0 C {LW*.21} -26, {LW*.33} 22, {LW*.5} 2 S {LW*.81} -24, {LW-12} 2'
 PIN=f'M{LW} 6 c-9 -12 -14 -17 -14 -24 a14 14 0 0 1 28 0 c0 7 -5 12 -14 24z'
@@ -117,7 +117,7 @@ async def main(res,fps,que):
                 await pg.evaluate(f'setT({OPENING_DUR})'); await pg.screenshot(path=f'{out}/opening_{tema}_ultimo-cuadro.png')
             if que in ('closing','closing-sin-videos','todo'):
                 vids=que!='closing-sin-videos'; suf='' if vids else '_sin-videos'
-                for lang in TXT:
+                for lang in [l for l in TXT if l in os.environ.get('ELITA_LANGS','ES,EN').split(',')]:
                     await load(closing(**c,lang=lang,videos=vids),JS_CLOSING)
                     mp4(await frames(CLOSING_ANIM),f'{out}/closing{suf}_{lang}_{tema}.mp4',hold=FINAL_INICIO+FINAL_DUR-CLOSING_ANIM)
                     await pg.evaluate(f'setT({CLOSING_ANIM})'); await pg.screenshot(path=f'{out}/pantalla-final{suf}_{lang}_{tema}.png')
