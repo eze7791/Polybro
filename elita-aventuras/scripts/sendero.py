@@ -157,11 +157,9 @@ KIT={'otono':'otono','halloween':'halloween','invierno-muneco':'invierno_a','inv
      'verano-mar':'verano_mar','verano-sombrilla':'verano_a','navidad':'navidad','sanpatricio':'sanpatricio'}
 CARTEL_LARGO=980
 def cuadro(b): return f'<div style="position:relative;width:1920px;height:1080px">{b}</div>'
-# Píldora de clima al lado del cartel, a la misma altura (centrada con el cartel), para corto y largo
-JUNTO={'junto-al-corto':CART['x1']+44+24-(PILL['cx']-PILL['r']),'junto-al-largo':CARTEL_LARGO+44+24-(PILL['cx']-PILL['r'])}
-def kit_clima_junto(out='sendero-kit'):
-    jobs=[(f'{out}/{nombre}/clima-{lado}_{c}_4K.png',cuadro(pildora(t,cielo=c,dx=dx,cy=CART['cy'])),(1920,1080),2)
-          for nombre,t in KIT.items() for lado,dx in JUNTO.items() for c in A.CIELOS]
+# Píldora de clima en el mismo lugar que el cartel (misma altura, a la izquierda): aparecen en momentos distintos
+def kit_clima_arriba(out='sendero-kit'):
+    jobs=[(f'{out}/{nombre}/clima-arriba_{c}_4K.png',cuadro(pildora(t,cielo=c,cy=CART['cy'])),(1920,1080),2) for nombre,t in KIT.items() for c in A.CIELOS]
     asyncio.run(A.generar(jobs))
 def kit(out='sendero-kit'):
     jobs=[]
@@ -176,8 +174,8 @@ def kit(out='sendero-kit'):
 def hoja_lugares(path):
     celdas=''.join(f'<div style="position:relative;width:300px;height:150px;overflow:hidden"><div style="position:absolute;left:-40px;top:-760px">{cartel("otono",icono_n=ic)}</div><div style="position:absolute;left:0;bottom:4px;width:300px;text-align:center;font-family:JS;font-weight:700;font-size:16px;letter-spacing:3px;color:#2A2C27">{lug.upper()}</div></div>' for lug,ic in LUGARES.items())
     asyncio.run(A.generar([(path,f'<div style="width:1800px;height:460px;background:#C9D6C0;display:flex;flex-wrap:wrap">{celdas}</div>',(1800,460),1)]))
-if __name__=='__main__' and sys.argv[1:2]==['clima-junto']:
-    kit_clima_junto(sys.argv[2])
+if __name__=='__main__' and sys.argv[1:2]==['clima-arriba']:
+    kit_clima_arriba(sys.argv[2])
 elif __name__=='__main__' and sys.argv[1:2]==['kit']:
     kit()
 elif __name__=='__main__' and sys.argv[1:2]==['hoja']:
