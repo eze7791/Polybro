@@ -115,8 +115,10 @@ def pestana_pais(ancho='corta',texto=''):
     if texto: s+=f'<svg style="position:absolute;left:0;top:0;overflow:visible" width="1920" height="1080"><text x="{c["x0"]+50}" y="{y1+22.5}" font-family="JS" font-weight="700" font-size="20" letter-spacing="5" fill="{p["o"]}">{texto}</text></svg>'
     return s
 PILL=dict(cx=110,cy=962,r=44,x0=140,x1=540,alto=66)
-def pildora(tema,texto='',cielo='viento'):
-    p=PAL[tema]; c=PILL; y0=c['cy']-c['alto']/2
+def pildora(tema,texto='',cielo='viento',dx=0,cy=None):
+    # dx/cy: mover la píldora (p. ej. al lado del cartel, a su misma altura)
+    c=dict(PILL); c['cx']+=dx; c['x0']+=dx; c['x1']+=dx; c['cy']=cy or c['cy']
+    p=PAL[tema]; y0=c['cy']-c['alto']/2
     s=f'<svg style="position:absolute;left:0;top:0;overflow:visible;{SOMBRA}" width="1920" height="1080"><defs>{RUIDO}</defs>'
     s+=f'<rect x="{c["x0"]-30}" y="{y0}" width="{c["x1"]-c["x0"]+30}" height="{c["alto"]}" rx="{c["alto"]/2}" fill="{PAPEL}" stroke="{p["o"]}" stroke-width="4"/><rect x="{c["x0"]-30}" y="{y0}" width="{c["x1"]-c["x0"]+30}" height="{c["alto"]}" rx="{c["alto"]/2}" fill="{PAPEL}" filter="url(#papel)"/>'
     s+=f'<circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]}" fill="{p["c"]}" stroke="{p["o"]}" stroke-width="4"/><circle cx="{c["cx"]}" cy="{c["cy"]}" r="{c["r"]-8}" fill="none" stroke="{PAPEL}" stroke-opacity=".8" stroke-width="2" stroke-dasharray="5 5"/>'
@@ -155,6 +157,12 @@ KIT={'otono':'otono','halloween':'halloween','invierno-muneco':'invierno_a','inv
      'verano-mar':'verano_mar','verano-sombrilla':'verano_a','navidad':'navidad','sanpatricio':'sanpatricio'}
 CARTEL_LARGO=980
 def cuadro(b): return f'<div style="position:relative;width:1920px;height:1080px">{b}</div>'
+# Píldora de clima al lado del cartel, a la misma altura (centrada con el cartel), para corto y largo
+JUNTO={'junto-al-corto':CART['x1']+44+24-(PILL['cx']-PILL['r']),'junto-al-largo':CARTEL_LARGO+44+24-(PILL['cx']-PILL['r'])}
+def kit_clima_junto(out='sendero-kit'):
+    jobs=[(f'{out}/{nombre}/clima-{lado}_{c}_4K.png',cuadro(pildora(t,cielo=c,dx=dx,cy=CART['cy'])),(1920,1080),2)
+          for nombre,t in KIT.items() for lado,dx in JUNTO.items() for c in A.CIELOS]
+    asyncio.run(A.generar(jobs))
 def kit(out='sendero-kit'):
     jobs=[]
     for nombre,t in KIT.items():
@@ -168,7 +176,9 @@ def kit(out='sendero-kit'):
 def hoja_lugares(path):
     celdas=''.join(f'<div style="position:relative;width:300px;height:150px;overflow:hidden"><div style="position:absolute;left:-40px;top:-760px">{cartel("otono",icono_n=ic)}</div><div style="position:absolute;left:0;bottom:4px;width:300px;text-align:center;font-family:JS;font-weight:700;font-size:16px;letter-spacing:3px;color:#2A2C27">{lug.upper()}</div></div>' for lug,ic in LUGARES.items())
     asyncio.run(A.generar([(path,f'<div style="width:1800px;height:460px;background:#C9D6C0;display:flex;flex-wrap:wrap">{celdas}</div>',(1800,460),1)]))
-if __name__=='__main__' and sys.argv[1:2]==['kit']:
+if __name__=='__main__' and sys.argv[1:2]==['clima-junto']:
+    kit_clima_junto(sys.argv[2])
+elif __name__=='__main__' and sys.argv[1:2]==['kit']:
     kit()
 elif __name__=='__main__' and sys.argv[1:2]==['hoja']:
     hoja_lugares(sys.argv[2])

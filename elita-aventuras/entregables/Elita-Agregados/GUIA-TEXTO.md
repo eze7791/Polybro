@@ -168,3 +168,7 @@ Largos aproximados: cartel corto hasta ~14 letras en mayúsculas ("PHOENIX PARK"
 ### Pestaña del país (debajo del cartel)
 `sendero-kit/pais/pestana-pais_corta_4K.png` (hasta ~9 letras, "IRLANDA") y `pestana-pais_larga_4K.png` (hasta ~16, "UNITED KINGDOM"). Sirve para todas las temporadas. Escala 100 %.
 Texto: Josefin Sans Bold, 40, seguimiento 250, MAYÚSCULAS, color `5E4626`, alineado a la izquierda, posición 400 · 1801 (línea base), sin sombra. En 1080p: 20 y 200 · 900,5.
+
+### Clima al lado del cartel (misma altura)
+`sendero-kit/<temporada>/clima-junto-al-corto_<cielo>_4K.png` (para usar con el cartel corto) y `clima-junto-al-largo_<cielo>_4K.png` (con el largo). Escala 100 %.
+Texto del clima: Josefin Sans Bold 64, seguimiento 30, color `2A2C27`, línea base Y = 1672; X = 1792 (al lado del corto) o 2312 (al lado del largo). En 1080p: 32, Y 836, X 896 / 1156.
