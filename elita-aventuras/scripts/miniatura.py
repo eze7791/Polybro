@@ -69,15 +69,42 @@ async def render(path,doc,transparente):
         await pg.screenshot(path=path,omit_background=transparente and not jpg,type='jpeg' if jpg else 'png',**({'quality':92} if jpg else {}))
         await b.close()
     os.remove(tmp)
+# ---------- modo "cozy otoño": color cálido + viñeta + hojas cayendo (miniatura del Grand Canal, 18/10) ----------
+def calidez(foto,salida,pos_y=.45):
+    """Recorta a 16:9 (pos_y: 0 arriba … 1 abajo), calienta el color y agrega viñeta suave. Lee HEIC si está pillow-heif."""
+    from PIL import Image, ImageEnhance, ImageOps
+    import numpy as np
+    try:
+        import pillow_heif; pillow_heif.register_heif_opener()
+    except ImportError: pass
+    im=ImageOps.exif_transpose(Image.open(foto)).convert('RGB'); w,h=im.size; ch=int(w*9/16)
+    if ch<=h: y0=int((h-ch)*pos_y); im=im.crop((0,y0,w,y0+ch))
+    im=im.resize((2560,1440),Image.LANCZOS); a=np.asarray(im).astype(float)/255; a=a**0.95
+    a[...,0]=a[...,0]*1.07+0.02; a[...,1]=a[...,1]*1.02+0.01; a[...,2]=a[...,2]*0.88
+    yy,xx=np.mgrid[0:1440,0:2560]; r=np.sqrt(((xx-1280)/1280)**2+((yy-720)/720)**2)
+    a*=(1-0.32*np.clip(r-0.55,0,1)**1.4)[...,None]
+    im=Image.fromarray((np.clip(a,0,1)*255).astype('uint8'))
+    im=ImageEnhance.Contrast(ImageEnhance.Color(im).enhance(1.12)).enhance(1.05); im.save(salida,quality=95)
+def hojas_otono():
+    import sendero as S
+    h=''.join(S.hoja_arce(x,y,s,r,c) if k%2==0 else S.hoja_oval(x,y,s*.9,r,c) for k,(x,y,s,r,c) in enumerate([(1120,95,1.5,20,'#E3A040'),(1200,190,1.1,-35,'#C8682E'),(1060,240,.9,50,'#D98A3A'),(1215,315,.8,10,'#B5532A'),(980,130,.7,-15,'#E3B052')]))
+    return f'<svg style="position:absolute;left:0;top:0;overflow:visible;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))" width="1280" height="720">{h}</svg>'
 if __name__=='__main__':
     a=argparse.ArgumentParser(description='Miniatura de YouTube con la estética de Elita')
     a.add_argument('foto',nargs='?'); a.add_argument('titulo',nargs='?',default=''); a.add_argument('lugar',nargs='?',default='')
     a.add_argument('--estilo',choices=['marco','ventana','minima'],default='marco')
     a.add_argument('--lang',choices=['ES','EN'],default='EN'); a.add_argument('--etiqueta',help='texto de arriba (por defecto 4K · AMBIENT SOUND / SONIDO AMBIENTE; "" para ninguno)')
     a.add_argument('--marco',action='store_true',help='solo el marco del estilo "marco", sin foto ni texto (PNG transparente)')
+    a.add_argument('--otono',action='store_true',help='modo cozy otoño: color cálido, viñeta y hojas cayendo (acepta HEIC)')
+    a.add_argument('--pos-y',type=float,default=.45,help='dónde recortar la foto a 16:9 (0 arriba, 1 abajo)')
     a.add_argument('-o','--salida',default='miniatura.jpg')
     o=a.parse_args()
     et=ETIQUETA[o.lang] if o.etiqueta is None else o.etiqueta
     if o.marco: doc=html('marco',None,texto=False)
-    else: doc=html(o.estilo,o.foto,o.titulo,o.lugar.upper(),et)
+    else:
+        foto=o.foto
+        if o.otono:
+            foto=os.path.splitext(o.salida)[0]+'_calida.jpg'; calidez(o.foto,foto,o.pos_y)
+        doc=html(o.estilo,foto,o.titulo,o.lugar.upper(),et)
+        if o.otono: doc=doc.replace('</div><script>',hojas_otono()+'</div><script>',1)
     asyncio.run(render(o.salida,doc,transparente=o.marco))

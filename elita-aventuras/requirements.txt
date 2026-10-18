@@ -1,1 +1,4 @@
 playwright
+pillow
+numpy
+pillow-heif
