@@ -14,6 +14,10 @@ def banner(bg='#F2EEE6',ink='#2A2C27',sand='#8C6A3C',variant='A'):
         b+=T(top+66,L[0],'CG',76,ink)
         b+=T(top+66+98,L[1],'CG',76,ink,it=True)
         b+=T(top+66+196,L[2],'CG',76,ink,it=True)
+    elif variant=='ES2':  # dos líneas: "Calles y caminos," / "sólo sonido ambiente." (pedido de Ivan, 18/10)
+        mid=(top+bot)/2
+        b+=T(mid-12,'Calles y caminos,','CG',88,ink)
+        b+=T(mid+90,'sólo sonido ambiente.','CG',72,ink,it=True)
     elif variant=='A':
         b+=T(top+56,'Calles y caminos,','CG',72,ink)
         b+=T(top+126,'sólo con sonido ambiente','CG',54,ink,it=True)
